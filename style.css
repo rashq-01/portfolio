@@ -949,15 +949,18 @@ section {
     .home-content h3 {
         font-size: 20px;
     }
-    
     .home-img {
         width: 320px;
         height: 320px;
     }
+    .home-img .glowing-cirlce::after {
+        width: 320px;
+        height: 320px;
+    }
     
-    .glowing-circle .image {
-        width: 280px;
-        height: 280px;
+    .glowing-cirlce .image {
+        width: 320px;
+        height: 320px;
     }
     
     .section-title {
@@ -1005,8 +1008,13 @@ section {
         height: 280px;
     }
     
-    .glowing-circle .image {
-        width: 240px;
-        height: 240px;
+    .home-img .glowing-cirlce::after {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .glowing-cirlce .image {
+        width: 280px;
+        height: 280px;
     }
 }
