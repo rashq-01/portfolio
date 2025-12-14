@@ -366,6 +366,9 @@ section {
     animation: zoomIn 1s ease forwards, floatImage 4s ease-in-out infinite;
     animation-delay: 2.1s, 3.1s;
 }
+.home-img:hover{
+    cursor: pointer;
+}
 
 .home-img .glowing-cirlce {
     position: relative;
@@ -767,12 +770,13 @@ section {
 .input-box textarea:focus ~ span,
 .input-box input:valid ~ span,
 .input-box textarea:valid ~ span {
-    top: -12px;
-    left: 12px;
-    font-size: 14px;
+    top: -27px;
+    left: 5px;
+    border-radius: 20%;
+    font-size: 16px;
     padding: 0 10px;
-    background: var(--card-bg);
-    color: var(--accent-blue);
+    /* background: var(--surface-dark); */
+    color: var(--accent-purple);
 }
 
 /* Footer */
