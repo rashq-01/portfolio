@@ -323,7 +323,7 @@ section {
     position: relative;
     overflow: hidden;
     z-index: 1;
-    box-shadow: 0 10px 30px rgba(0, 122, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
 }
 
 .btn::before {
@@ -340,7 +340,7 @@ section {
 
 .btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(0, 122, 255, 0.3);
+    box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
 }
 
 .btn:hover::before {
