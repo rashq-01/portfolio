@@ -20,6 +20,14 @@
             <a href="#portfolio" style="--i:4;">Portfolio</a>
             <a href="#contact" style="--i:5;">Contact</a>
         </nav>
+
+        <!-- Add this hamburger menu toggle -->
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="overlay" id="overlay"></div>
     </header>
 
     <!-- Home Section -->
@@ -407,6 +415,48 @@ Currently preparing for software engineering internships and entry-level roles.<
                 }
             });
         };
+
+
+         // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navbar = document.querySelector('.navbar');
+        const overlay = document.getElementById('overlay');
+        const navLink = document.querySelectorAll('.navbar a');
+
+        mobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            navbar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = navbar.classList.contains('active') ? 'hidden' : 'auto';
+        });
+
+        // Close menu when clicking overlay
+        overlay.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            navbar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close menu when clicking nav links
+        navLink.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                navbar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // Close menu on window resize if it's open
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                mobileMenu.classList.remove('active');
+                navbar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
     </script>
 </body>
 </html>
