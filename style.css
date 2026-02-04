@@ -82,7 +82,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(10, 10, 10, 0.9);
+    background: rgba(10, 10, 10, 0.45);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     display: flex;
@@ -978,7 +978,7 @@ section {
         right: -100%;
         width: 300px;
         height: 100vh;
-        background: rgba(10, 10, 10, 0.95);
+        background: rgba(10, 10, 10, 0.8);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         display: flex;
