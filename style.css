@@ -218,6 +218,16 @@ section {
 }
 
 /* Home Section */
+/* Typed.js styling */
+.auto-type {
+    color: var(--white);
+}
+
+.typed-cursor {
+    color: var(--accent-blue);
+    font-size: 24px;
+}
+
 #home {
     background: var(--gradient-dark);
     position: relative;
