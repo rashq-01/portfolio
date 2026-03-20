@@ -193,7 +193,7 @@ section {
 .nav {
   position: fixed;
   inset: 0 0 auto;
-  z-index: 900;
+  z-index: 960;
   height: var(--navh);
   display: flex;
   align-items: center;

@@ -126,7 +126,6 @@
                 document.body.style.overflow = "";
             }
             burger.addEventListener("click", () => {
-              console.log("burger clicked, drawer open:", drawer.classList.contains("open"));
                 drawer.classList.contains("open") ? closeMenu() : openMenu();
             });
             scrim.addEventListener("click", closeMenu);
