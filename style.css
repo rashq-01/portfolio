@@ -2442,6 +2442,7 @@ footer {
   border-radius: 14px;
   background: var(--bg1);
   cursor: crosshair;
+  touch-action: none;  /* tells browser: canvas owns all touch, don't scroll */
 }
 [data-theme="light"] #sk-graph-cv {
   background: rgba(255,255,255,0.8);

@@ -1017,33 +1017,72 @@
     vpZ = newZ;
   }, { passive: false });
 
-  /* touch: 1-finger pan, 2-finger pinch-zoom */
+  /* touch: 1-finger drag node or pan, 2-finger pinch-zoom */
   let touch1 = null, touch2 = null, initPinchDist = 0, initVpZ = 1;
   cv.addEventListener('touchstart', e => {
     e.preventDefault();
     if (e.touches.length === 1) {
-      touch1   = e.touches[0];
-      lastPanX = touch1.clientX; lastPanY = touch1.clientY;
-      panning  = true;
+      touch1 = e.touches[0];
+      const rect = cv.getBoundingClientRect();
+      const sx   = touch1.clientX - rect.left;
+      const sy   = touch1.clientY - rect.top;
+      const hit  = getNode(sx, sy);
+      if (hit) {
+        /* touching a node — start node drag */
+        dragging = hit;
+        const w  = toWorld(sx, sy);
+        dragOffX = hit.x - w.x;
+        dragOffY = hit.y - w.y;
+        hit.vx = 0; hit.vy = 0;
+        hovered = hit;
+        panning = false;
+      } else {
+        /* touching empty space — pan */
+        panning  = true;
+        lastPanX = touch1.clientX;
+        lastPanY = touch1.clientY;
+        dragging = null;
+      }
     } else if (e.touches.length === 2) {
+      dragging = null;
+      panning  = false;
       touch1 = e.touches[0]; touch2 = e.touches[1];
       initPinchDist = Math.hypot(touch1.clientX - touch2.clientX, touch1.clientY - touch2.clientY);
       initVpZ = vpZ;
-      panning = false;
     }
   }, { passive: false });
+
   cv.addEventListener('touchmove', e => {
     e.preventDefault();
-    if (e.touches.length === 1 && panning) {
-      vpX += e.touches[0].clientX - lastPanX;
-      vpY += e.touches[0].clientY - lastPanY;
-      lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY;
+    if (e.touches.length === 1) {
+      const t    = e.touches[0];
+      const rect = cv.getBoundingClientRect();
+      const sx   = t.clientX - rect.left;
+      const sy   = t.clientY - rect.top;
+      if (dragging) {
+        /* move the node */
+        const w    = toWorld(sx, sy);
+        dragging.x = w.x + dragOffX;
+        dragging.y = w.y + dragOffY;
+        dragging.vx = 0; dragging.vy = 0;
+        showTip(dragging, t.clientX, t.clientY);
+      } else if (panning) {
+        vpX += t.clientX - lastPanX;
+        vpY += t.clientY - lastPanY;
+        lastPanX = t.clientX;
+        lastPanY = t.clientY;
+      }
     } else if (e.touches.length === 2) {
       const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
       vpZ = Math.max(0.35, Math.min(3, initVpZ * d / initPinchDist));
     }
   }, { passive: false });
-  cv.addEventListener('touchend', () => { panning = false; touch1 = null; touch2 = null; });
+
+  cv.addEventListener('touchend', e => {
+    if (dragging) { pinned.add(dragging.id); dragging = null; }
+    panning = false; hovered = null; hideTip();
+    touch1 = null; touch2 = null;
+  });
 
   /* double-tap to reset view */
   let lastTap = 0;
