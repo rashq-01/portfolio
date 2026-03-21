@@ -46,7 +46,8 @@
         <a href="#about"> <span class="nn">02.</span>about</a>
         <a href="#work"> <span class="nn">03.</span>work</a>
         <a href="#skills"> <span class="nn">04.</span>skills</a>
-        <a href="#contact"> <span class="nn">05.</span>contact</a>
+        <a href="#journey"> <span class="nn">05.</span>journey</a>
+        <a href="#contact"> <span class="nn">06.</span>contact</a>
       </div>
       <div class="nav-r">
         <button class="ibtn" id="tgl" aria-label="Toggle theme">
@@ -66,7 +67,8 @@
       <a href="#about"> <span class="nn">02.</span>about</a>
       <a href="#work"> <span class="nn">03.</span>work</a>
       <a href="#skills"><span class="nn">04.</span>skills</a>
-      <a href="#contact"><span class="nn">05.</span>contact</a>
+      <a href="#journey"><span class="nn">05.</span>journey</a>
+      <a href="#contact"><span class="nn">06.</span>contact</a>
     </nav>
   </div>
 
@@ -392,15 +394,143 @@
               <div class="sk-it"><i class="bx bx-code-block sk-ii"></i><span class="sk-in">Postman</span></div>
               <div class="sk-it"><i class="bx bxl-tux sk-ii"></i><span class="sk-in">Linux</span></div>
               <div class="sk-it"><i class="bx bx-terminal sk-ii"></i><span class="sk-in">VS Code</span></div>
+              <div class="sk-it"><i class="bx bxl-docker sk-ii"></i><span class="sk-in">Docker</span></div>
             </div>
+          </div>
+        </div>
+
+        <!-- SKILL NETWORK GRAPH -->
+        <div class="sk-graph-wrap rv">
+          <div class="sk-graph-label">Skill Network — hover to explore connections</div>
+          <canvas id="sk-graph-cv"></canvas>
+          <p class="sk-graph-hint">hover a node to highlight its connections · size = proficiency</p>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- JOURNEY -->
+    <section id="journey">
+      <div class="W">
+        <div class="rv">
+          <span class="ey">Journey</span>
+          <h2 class="st">The Road So Far</h2>
+          <p class="ss">From SEE in Nepal to B.Tech in India — every real milestone, every shipped system, and the road is still going.</p>
+        </div>
+
+        <div class="journey-wrap">
+          <div class="journey-road"></div>
+
+          <!-- 1. SEE — 2022 -->
+          <div class="jn-item rv">
+            <div class="jn-card">
+              <div class="jn-year">2022</div>
+              <div class="jn-title">10th Grade — SEE Completed</div>
+              <div class="jn-sub">// T.M.P.R.R.S. School · Birgunj, Parsa, Nepal 🇳🇵</div>
+              <p class="jn-desc">Completed the Secondary Education Examination (SEE) at Trijuddha Mahavir Prasad Raghuvir Ram Secondary School, Birgunj, securing a GPA of <strong>3.10 / 4.00</strong>. This was the turning point — where curiosity for computers became a real direction.</p>
+              <div class="jn-tags">
+                <span class="jn-tag">SEE</span>
+                <span class="jn-tag">GPA 3.10 / 4.00</span>
+                <span class="jn-tag">Birgunj, Nepal</span>
+              </div>
+            </div>
+            <div class="jn-dot"></div>
+            <div class="jn-spacer"></div>
+          </div>
+
+          <!-- 2. +2 Science NEB — 2022–2024 -->
+          <div class="jn-item rv">
+            <div class="jn-spacer"></div>
+            <div class="jn-dot"></div>
+            <div class="jn-card">
+              <div class="jn-year">2022 — 2024</div>
+              <div class="jn-title">+2 Science — NEB</div>
+              <div class="jn-sub">// National Infotech College (NI College) · Birgunj, Parsa, Nepal 🇳🇵</div>
+              <p class="jn-desc">Completed +2 Science under the National Examination Board at NI College, Birgunj, with a GPA of <strong>3.06 / 4.00</strong>. Studied Physics, Math, and Computer Science — wrote first programs in C and built a solid analytical foundation.</p>
+              <div class="jn-tags">
+                <span class="jn-tag">NEB</span>
+                <span class="jn-tag">GPA 3.06 / 4.00</span>
+                <span class="jn-tag">NI College</span>
+                <span class="jn-tag">C Programming</span>
+                <span class="jn-tag">Physics</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. B.Tech CSE SVCET — 2024 -->
+          <div class="jn-item rv">
+            <div class="jn-card">
+              <div class="jn-year">2024 — Present</div>
+              <div class="jn-title">B.Tech in CSE — SVCET</div>
+              <div class="jn-sub">// Sri Venkateswara College of Engineering Technology · Chittoor, AP, India 🇮🇳</div>
+              <p class="jn-desc">Enrolled in B.Tech Computer Science & Engineering at SVCET, Chittoor, Andhra Pradesh. Deep-diving into DSA, OOP, system design, and building real production systems alongside coursework. This is where everything accelerated.</p>
+              <div class="jn-tags">
+                <span class="jn-tag">B.Tech CSE</span>
+                <span class="jn-tag">SVCET</span>
+                <span class="jn-tag">Chittoor, AP</span>
+                <span class="jn-tag">1st Year</span>
+                <span class="jn-tag">DSA</span>
+                <span class="jn-tag">OOP</span>
+              </div>
+            </div>
+            <div class="jn-dot"></div>
+            <div class="jn-spacer"></div>
+          </div>
+
+          <!-- 4. LibraTech — 2025 -->
+          <div class="jn-item rv">
+            <div class="jn-spacer"></div>
+            <div class="jn-dot"></div>
+            <div class="jn-card">
+              <div class="jn-year">2025</div>
+              <div class="jn-title">LibraTech — First Real Project</div>
+              <div class="jn-sub">// Full-stack RBAC library management system</div>
+              <p class="jn-desc">Built and shipped LibraTech — a production-grade library management system with role-based access control, JWT authentication, automated issue/return workflows, and a real-time availability dashboard. The first system built from scratch end-to-end.</p>
+              <div class="jn-tags">
+                <span class="jn-tag">Node.js</span>
+                <span class="jn-tag">MongoDB</span>
+                <span class="jn-tag">JWT</span>
+                <span class="jn-tag">Express</span>
+                <span class="jn-tag">RBAC</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. NexusChat — Jan 2026, ongoing -->
+          <div class="jn-item rv">
+            <div class="jn-card">
+              <div class="jn-year">
+                Jan 2026 — Present
+                <span class="jn-badge">● ONGOING</span>
+              </div>
+              <div class="jn-title">NexusChat — Distributed Messaging Platform</div>
+              <div class="jn-sub">// 2nd Year · 14,500+ msg/sec · 5-node cluster · Redis Pub/Sub</div>
+              <p class="jn-desc">Currently building NexusChat — a production-grade real-time distributed messaging platform handling <strong>14,500+ WebSocket messages per second</strong> via Nginx load balancing across 5 Node.js instances and Redis Pub/Sub cross-node sync. The hardest and most complex system so far — still evolving.</p>
+              <div class="jn-tags">
+                <span class="jn-tag">Node.js</span>
+                <span class="jn-tag">Socket.IO</span>
+                <span class="jn-tag">Redis</span>
+                <span class="jn-tag">Nginx</span>
+                <span class="jn-tag">MongoDB</span>
+                <span class="jn-tag">2nd Year</span>
+                <span class="jn-tag">Open to Work</span>
+              </div>
+            </div>
+            <div class="jn-dot ongoing"></div>
+            <div class="jn-spacer"></div>
+          </div>
+
+          <div class="journey-end">
+            <div class="je-dot"></div>
+            <div class="je-label">road continues...</div>
           </div>
         </div>
       </div>
     </section>
 
     <div class="div"></div>
-
-    <!-- CONTACT -->
     <section id="contact">
       <div class="W">
         <div class="ct-inner rv">
