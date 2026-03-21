@@ -2,516 +2,460 @@
 <html lang="en" data-theme="dark">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Rajesh Pandit — Backend Systems Engineer. Distributed systems, real-time infra, APIs that scale.">
-    <title>Rajesh Pandit — Backend Engineer</title>
-    <link rel="shortcut icon" type="image/png" href="icon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-        <script src="https://kit.fontawesome.com/49e50f0631.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description"
+    content="Rajesh Pandit — Backend Systems Engineer. Distributed systems, real-time infrastructure, APIs that scale.">
+  <title>Rajesh Pandit // Backend Engineer</title>
+  <link rel="shortcut icon" type="image/png" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <canvas id="cv"></canvas>
+  <canvas id="cv"></canvas>
+  <div id="spotlight"></div>
+  <div id="progress"></div>
+  <button id="btt" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="bx bx-up-arrow-alt"></i>
+  </button>
 
-    <!-- ═══════════ NAV ══════════════════════════════════════════ -->
-    <nav class="nav" id="nav">
-        <div class="nav-inner">
-            <a href="#home" class="nav-logo">
-                <span class="logo-prefix">~/</span><span class="logo-name">rajesh</span><span
-                    class="logo-cursor"></span>
-            </a>
-            <div class="nav-links" id="nav-links">
-                <a href="#home" class="active"><span class="ln-num">01.</span>home</a>
-                <a href="#about"> <span class="ln-num">02.</span>about</a>
-                <a href="#work"> <span class="ln-num">03.</span>work</a>
-                <a href="#skills"> <span class="ln-num">04.</span>skills</a>
-                <a href="#contact"> <span class="ln-num">05.</span>contact</a>
-            </div>
-            <div class="nav-right">
-                <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
-                    <i class="bx bx-sun icon-sun"></i><i class="bx bx-moon icon-moon"></i>
-                </button>
-                <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Mobile drawer -->
-    <div class="mob-drawer" id="mob-drawer" aria-hidden="true">
-        <div class="mob-scrim" id="mob-scrim"></div>
-        <nav class="mob-panel" id="mob-panel">
-            <a href="#home"><span class="ln-num">01.</span>home</a>
-            <a href="#about"><span class="ln-num">02.</span>about</a>
-            <a href="#work"><span class="ln-num">03.</span>work</a>
-            <a href="#skills"><span class="ln-num">04.</span>skills</a>
-            <a href="#contact"><span class="ln-num">05.</span>contact</a>
-        </nav>
+  <!-- ═══ BOOT SCREEN ═══ -->
+  <div id="boot">
+    <div class="boot-logo">rajesh_pandit.dev</div>
+    <div class="boot-bar-wrap">
+      <div class="boot-bar" id="bbar"></div>
     </div>
+    <div class="boot-text" id="btxt">Initializing...</div>
+  </div>
 
-    <main>
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#home" class="logo">
+        <span class="logo-ps">~/</span><span class="logo-nm">rajesh</span><span class="logo-sb"></span>
+      </a>
+      <div class="nav-links" id="nl">
+        <a href="#home" class="act"><span class="nn">01.</span>home</a>
+        <a href="#about"> <span class="nn">02.</span>about</a>
+        <a href="#work"> <span class="nn">03.</span>work</a>
+        <a href="#skills"> <span class="nn">04.</span>skills</a>
+        <a href="#contact"> <span class="nn">05.</span>contact</a>
+      </div>
+      <div class="nav-r">
+        <button class="ibtn" id="tgl" aria-label="Toggle theme">
+          <i class="bx bx-sun i-sun"></i><i class="bx bx-moon i-moon"></i>
+        </button>
+        <button class="ibtn brgr" id="burg" aria-label="Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
 
-        <!-- ═══════════ HERO ══════════════════════════════════════════ -->
-        <section id="home">
-            <div class="hero-inner">
-                <div class="hero-left">
+  <div class="mdrw" id="mdrw" aria-hidden="true">
+    <div class="mscrim" id="mscrim"></div>
+    <nav class="mpnl" id="mpnl">
+      <a href="#home"> <span class="nn">01.</span>home</a>
+      <a href="#about"> <span class="nn">02.</span>about</a>
+      <a href="#work"> <span class="nn">03.</span>work</a>
+      <a href="#skills"><span class="nn">04.</span>skills</a>
+      <a href="#contact"><span class="nn">05.</span>contact</a>
+    </nav>
+  </div>
 
-                    <p class="hero-pre">
-                        <span class="pre-dot"></span>
-                        <span>open to opportunities &mdash; backend engineering roles</span>
-                    </p>
+  <main>
 
-                    <h1 class="hero-name">Rajesh<br><span class="name-dim">Pandit</span></h1>
-
-                    <div class="hero-codetitle">
-                        <span class="kw-fn">function</span>
-                        <span class="kw-var"> engineer</span><span class="kw-punct">(</span><span
-                            class="kw-str">"distributed-systems"</span><span class="kw-punct">) {</span><br>
-                        &nbsp;&nbsp;<span class="kw-comment">// builds infra that scales under pressure</span><br>
-                        <span class="kw-punct">}</span>
-                    </div>
-
-                    <p class="hero-desc">
-                        <strong>Backend Systems Engineer</strong> specializing in distributed infrastructure,
-                        real-time platforms, and APIs engineered to handle massive concurrency.
-                        I think in systems, not just code.
-                    </p>
-
-                    <div class="hero-terminal">
-                        <div class="term-bar">
-                            <div class="term-dot td1"></div>
-                            <div class="term-dot td2"></div>
-                            <div class="term-dot td3"></div>
-                            <span class="term-title">bash &mdash; rajesh@kali:~</span>
-                        </div>
-                        <div class="term-body">
-                            <span class="term-prompt"><span class="term-user">rajesh</span><span
-                                    class="kw-punct">@</span><span class="term-host">kali</span><span
-                                    class="kw-punct">:</span><span class="term-path">~</span><span
-                                    class="kw-punct">$</span>&nbsp;</span>
-                            <span class="term-text" id="typed-el"></span><span class="term-cur"></span>
-                        </div>
-                    </div>
-
-                    <div class="hero-actions">
-                        <a href="#work" class="btn btn-primary"><i class="bx bx-code-block"></i>&nbsp;See My Work</a>
-                        <a href="#contact" class="btn btn-outline">Get in Touch</a>
-                    </div>
-
-                    <div class="hero-social">
-                        <a href="https://github.com/rashq-01" target="_blank" rel="noopener" aria-label="GitHub"> <i
-                                class="bx bxl-github"></i></a>
-                        <a href="https://linkedin.com/in/rashq" target="_blank" rel="noopener" aria-label="LinkedIn"><i
-                                class="bx bxl-linkedin"></i></a>
-                        <a href="https://leetcode.com/u/rashq_01/" target="_blank" rel="noopener"
-                            aria-label="LeetCode"><i class="fa-brands fa-leetcode"></i></a>
-                        <a href="https://x.com/rashq_01" target="_blank" rel="noopener" aria-label="X"> <i
-                                class="bx bxl-twitter"></i></a>
-                        <a href="https://facebook.com/rashq0" target="_blank" rel="noopener" aria-label="Facebook"><i
-                                class="bx bxl-facebook"></i></a>
-                    </div>
-
-                    <div class="hero-metrics">
-                        <div class="metric"><span class="metric-val" id="ws-counter">0</span><span
-                                class="metric-label">msg/sec peak</span></div>
-                        <div class="metric"><span class="metric-val">5x</span><span class="metric-label">Node
-                                cluster</span></div>
-                        <div class="metric"><span class="metric-val">4</span><span class="metric-label">Projects
-                                built</span></div>
-                        <div class="metric"><span class="metric-val">22</span><span class="metric-label">Years
-                                old</span></div>
-                    </div>
-
-                </div><!-- /hero-left -->
-
-                <!-- Photo card -->
-                <div class="hero-photo-col">
-                    <div class="hero-photo-scene">
-                        <div class="hero-photo-card" id="photo-card">
-                            <img src="pic.png" alt="Rajesh Pandit — Backend Systems Engineer">
-                            <div class="p-ov"></div>
-                            <div class="p-sheen" id="photo-sheen"></div>
-                            <div class="p-top"></div>
-                            <div class="p-corner tl"></div>
-                            <div class="p-corner br"></div>
-                            <div class="p-badge">
-                                <div class="p-dot"></div>
-                                <span class="p-txt">Open to opportunities</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+    <!-- HOME -->
+    <section id="home">
+      <div class="hero-grid">
+        <div class="hl">
+          <div class="h-badge"><span class="bdot"></span>open to opportunities</div>
+          <h1 class="h-name">Rajesh<br><span class="h-name-g" data-text="Pandit">Pandit</span></h1>
+          <div class="h-code">
+            <span class="kw">const</span> <span class="ka"> role</span>
+            <span class="ko"> = </span>
+            <span class="ks">"Backend Systems Engineer"</span>
+            <span class="ko"> // scale&#x221E;</span>
+          </div>
+          <div class="h-term">
+            <div class="t-bar">
+              <div class="td td1"></div>
+              <div class="td td2"></div>
+              <div class="td td3"></div>
+              <span class="t-ttl">bash &mdash; rajesh@dev:~</span>
             </div>
-        </section>
-
-        <div class="divider"></div>
-
-        <!-- ═══════════ ABOUT ═══════════════════════════════════════ -->
-        <section id="about">
-            <div class="wrap">
-                <div class="r">
-                    <span class="sec-eyebrow">About</span>
-                    <h2 class="sec-title">Who I Am</h2>
-                </div>
-                <div class="about-grid">
-                    <div class="about-body r" data-d="1">
-                        <p>I'm a computer science student who spends most of my time thinking about <strong>how systems
-                                fail at scale</strong> — and engineering them so they don't. My focus is backend
-                            infrastructure: distributed messaging, real-time WebSocket systems, load balancing, and APIs
-                            built to survive concurrency.</p>
-                        <p>Rather than collecting frameworks, I go deep. I built a production-grade chat platform
-                            sustaining <strong>14,500+ messages per second</strong> using Nginx load balancing, Redis
-                            Pub/Sub, and a 5-instance Node.js cluster. I write C++ to understand things at the boundary
-                            level.</p>
-                        <p>My goal is a software engineering role where I work on infrastructure that millions depend
-                            on. Sharpening DSA and system design every day.</p>
-                        <a href="https://drive.google.com/drive/folders/13wYCy4dZ3_jTerUbkt_yKY6EyJcbz17C?usp=sharing"
-                            target="_blank" rel="noopener" class="btn btn-outline"
-                            style="align-self:flex-start;margin-top:8px">
-                            <i class="bx bx-download"></i>&nbsp;Download R&eacute;sum&eacute;
-                        </a>
-                    </div>
-                    <div class="r" data-d="2">
-                        <div class="info-panel">
-                            <div class="info-bar">
-                                <div class="win-dots"><span class="wd1"></span><span class="wd2"></span><span
-                                        class="wd3"></span></div>
-                                <span class="info-file">rajesh.config.json</span>
-                            </div>
-                            <div class="info-lines">
-                                <div class="iline"><span class="ik">name</span> <span class="iv iv-str">"Rajesh
-                                        Pandit"</span></div>
-                                <div class="iline"><span class="ik">age</span> <span class="iv iv-num">21</span></div>
-                                <div class="iline"><span class="ik">location</span><span class="iv iv-str">"Birgunj,
-                                        Nepal"</span></div>
-                                <div class="iline"><span class="ik">email</span> <span class="iv"><a
-                                            href="mailto:rashq122@gmail.com">"rashq122@gmail.com"</a></span></div>
-                                <div class="iline"><span class="ik">focus</span> <span class="iv">["backend", "systems",
-                                        "DSA"]</span></div>
-                                <div class="iline"><span class="ik">status</span> <span
-                                        class="iv iv-bool">"open_to_roles": true</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="t-body">
+              <span class="t-ps"><span class="t-us">rajesh</span><span class="t-at">@</span><span
+                  class="t-ht">dev</span><span class="t-at">:~$&nbsp;</span></span>
+              <span class="t-tx" id="typed-el"></span><span class="t-cr"></span>
             </div>
-        </section>
-
-        <div class="divider"></div>
-
-        <!-- ═══════════ WORK ═════════════════════════════════════════ -->
-        <section id="work">
-            <div class="wrap">
-                <div class="r">
-                    <span class="sec-eyebrow">Selected Work</span>
-                    <h2 class="sec-title">Projects</h2>
-                    <p class="sec-sub">Systems I've designed and built — each with a defined problem, measurable result,
-                        and intentional architecture.</p>
-                </div>
-                <div class="projects-grid">
-
-                    <article class="proj r" data-d="1">
-                        <div class="proj-img">
-                            <img src="NexusChat.jpeg" alt="NexusChat distributed messaging platform" loading="lazy">
-                            <div class="proj-img-ov"></div>
-                            <span class="proj-feat">Featured</span>
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-top"><span class="proj-num">01</span><span class="proj-cat">Distributed
-                                    Systems</span></div>
-                            <h3 class="proj-name">NexusChat</h3>
-                            <p class="proj-sub">// distributed real-time messaging platform</p>
-                            <div class="proj-metric"><span class="pm-val">14,500+</span><span class="pm-lbl">WebSocket
-                                    msg/sec sustained</span></div>
-                            <p class="proj-desc">Engineered for high concurrency with Nginx load balancing across a
-                                5-instance Node.js cluster. Redis Pub/Sub synchronizes all instances — horizontal
-                                scaling without message loss. JWT auth, real-time presence, room management.</p>
-                            <div class="proj-stack">
-                                <span>Node.js</span><span>Express</span><span>Socket.IO</span><span>MongoDB</span><span>Redis</span><span>Nginx</span><span>JWT</span>
-                            </div>
-                            <div class="proj-footer"><a href="https://github.com/rashq-01/NexusChat.git" target="_blank"
-                                    rel="noopener" class="proj-link">view_source() <i
-                                        class="bx bx-link-external"></i></a></div>
-                        </div>
-                    </article>
-
-                    <article class="proj r" data-d="2">
-                        <div class="proj-img">
-                            <img src="libraTech.png" alt="LibraTech library management" loading="lazy">
-                            <div class="proj-img-ov"></div>
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-top"><span class="proj-num">02</span><span class="proj-cat">Full
-                                    Stack</span></div>
-                            <h3 class="proj-name">LibraTech</h3>
-                            <p class="proj-sub">// role-based library management system</p>
-                            <p class="proj-desc">Full-stack RBAC system (admin/member), JWT auth, automated issue/return
-                                workflows, and real-time availability dashboard. Clean separation between admin and
-                                user-facing interfaces.</p>
-                            <div class="proj-stack">
-                                <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Node.js</span><span>Express</span><span>MongoDB</span><span>JWT</span>
-                            </div>
-                            <div class="proj-footer"><a href="https://github.com/rashq-01/Library-Management-System.git"
-                                    target="_blank" rel="noopener" class="proj-link">view_source() <i
-                                        class="bx bx-link-external"></i></a></div>
-                        </div>
-                    </article>
-
-                    <article class="proj r" data-d="3">
-                        <div class="proj-img">
-                            <img src="airBNB.webp" alt="Airbnb Clone" loading="lazy">
-                            <div class="proj-img-ov"></div>
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-top"><span class="proj-num">03</span><span class="proj-cat">Full
-                                    Stack</span></div>
-                            <h3 class="proj-name">Airbnb Clone</h3>
-                            <p class="proj-sub">// full-stack property rental platform</p>
-                            <p class="proj-desc">End-to-end rental platform: secure auth, property listings, search
-                                filters, booking management, user dashboards. SSR with EJS for fast initial load and
-                                clean URL routing.</p>
-                            <div class="proj-stack">
-                                <span>Node.js</span><span>Express</span><span>EJS</span><span>MongoDB</span><span>CSS</span><span>REST
-                                    API</span></div>
-                            <div class="proj-footer"><a href="https://github.com/rashq-01/Air_BNB_Clone.git"
-                                    target="_blank" rel="noopener" class="proj-link">view_source() <i
-                                        class="bx bx-link-external"></i></a></div>
-                        </div>
-                    </article>
-
-                    <article class="proj r" data-d="4">
-                        <div class="proj-img">
-                            <img src="https://5.imimg.com/data5/SELLER/Default/2024/4/412012786/UZ/RT/CT/37169537/library-management-system-1000x1000.png"
-                                alt="Library CLI C++" loading="lazy">
-                            <div class="proj-img-ov"></div>
-                        </div>
-                        <div class="proj-body">
-                            <div class="proj-top"><span class="proj-num">04</span><span class="proj-cat">Systems /
-                                    C++</span></div>
-                            <h3 class="proj-name">Library CLI</h3>
-                            <p class="proj-sub">// systems-level C++ with file persistence</p>
-                            <p class="proj-desc">CLI library system demonstrating systems programming: file-based
-                                persistence, OOP class hierarchies for book/member modelling, full record management.
-                                Built to understand memory and data at the boundary level.</p>
-                            <div class="proj-stack"><span>C++</span><span>OOP</span><span>File
-                                    I/O</span><span>CLI</span></div>
-                            <div class="proj-footer"><a
-                                    href="https://github.com/rashq-01/currentProject/tree/80ffbad4bf76bef0c992a70555a10b2131bf1450/2_Library_Management"
-                                    target="_blank" rel="noopener" class="proj-link">view_source() <i
-                                        class="bx bx-link-external"></i></a></div>
-                        </div>
-                    </article>
-
-                </div>
-            </div>
-        </section>
-
-        <div class="divider"></div>
-
-        <!-- ═══════════ SKILLS ════════════════════════════════════════ -->
-        <section id="skills">
-            <div class="wrap">
-                <div class="r">
-                    <span class="sec-eyebrow">Expertise</span>
-                    <h2 class="sec-title">Technical Skills</h2>
-                    <p class="sec-sub">Organized by system layer. Every skill has been shipped in real code.</p>
-                </div>
-                <div class="skills-grid">
-                    <div class="sk-card r" data-d="1">
-                        <div class="sk-head">
-                            <div class="sk-ico"><i class="bx bx-server"></i></div><span class="sk-name">Backend &amp;
-                                Runtime</span>
-                        </div>
-                        <div class="sk-items">
-                            <div class="sk-item"><i class="bx bxl-nodejs sk-iico"></i><span
-                                    class="sk-iname">Node.js</span></div>
-                            <div class="sk-item"><i class="bx bx-extension sk-iico"></i><span
-                                    class="sk-iname">Express.js</span></div>
-                            <div class="sk-item"><i class="bx bx-plug sk-iico"></i><span
-                                    class="sk-iname">Socket.IO</span></div>
-                            <div class="sk-item"><i class="bx bx-wifi sk-iico"></i><span
-                                    class="sk-iname">WebSockets</span></div>
-                            <div class="sk-item"><i class="bx bx-transfer sk-iico"></i><span class="sk-iname">REST
-                                    APIs</span></div>
-                        </div>
-                    </div>
-                    <div class="sk-card r" data-d="2">
-                        <div class="sk-head">
-                            <div class="sk-ico"><i class="bx bx-network-chart"></i></div><span
-                                class="sk-name">Infrastructure &amp; Scale</span>
-                        </div>
-                        <div class="sk-items">
-                            <div class="sk-item"><i class="bx bx-shield-quarter sk-iico"></i><span
-                                    class="sk-iname">Nginx</span></div>
-                            <div class="sk-item"><i class="bx bx-sitemap sk-iico"></i><span class="sk-iname">Load
-                                    Balancing</span></div>
-                            <div class="sk-item"><i class="bx bx-expand sk-iico"></i><span class="sk-iname">Horizontal
-                                    Scaling</span></div>
-                            <div class="sk-item"><i class="bx bx-mail-send sk-iico"></i><span
-                                    class="sk-iname">Pub/Sub</span></div>
-                            <div class="sk-item"><i class="bx bx-chip sk-iico"></i><span class="sk-iname">Caching</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sk-card r" data-d="3">
-                        <div class="sk-head">
-                            <div class="sk-ico"><i class="bx bx-data"></i></div><span class="sk-name">Data &amp;
-                                Storage</span>
-                        </div>
-                        <div class="sk-items">
-                            <div class="sk-item"><i class="bx bxl-mongodb sk-iico"></i><span
-                                    class="sk-iname">MongoDB</span></div>
-                            <div class="sk-item"><i class="bx bx-memory-card sk-iico"></i><span
-                                    class="sk-iname">Redis</span></div>
-                            <div class="sk-item"><i class="bx bx-table sk-iico"></i><span class="sk-iname">MySQL</span>
-                            </div>
-                            <div class="sk-item"><i class="bx bx-bar-chart-alt-2 sk-iico"></i><span
-                                    class="sk-iname">Indexing</span></div>
-                        </div>
-                    </div>
-                    <div class="sk-card r" data-d="4">
-                        <div class="sk-head">
-                            <div class="sk-ico"><i class="bx bx-code-alt"></i></div><span
-                                class="sk-name">Languages</span>
-                        </div>
-                        <div class="sk-items">
-                            <div class="sk-item"><i class="bx bxl-javascript sk-iico"></i><span
-                                    class="sk-iname">JavaScript</span></div>
-                            <div class="sk-item"><i class="bx bxl-c-plus-plus sk-iico"></i><span
-                                    class="sk-iname">C++</span></div>
-                            <div class="sk-item"><i class="bx bx-code-curly sk-iico"></i><span class="sk-iname">C</span>
-                            </div>
-                            <div class="sk-item"><i class="bx bxl-python sk-iico"></i><span
-                                    class="sk-iname">Python</span></div>
-                        </div>
-                    </div>
-                    <div class="sk-card r" data-d="1">
-                        <div class="sk-head">
-                            <div class="sk-ico"><i class="bx bx-shield"></i></div><span class="sk-name">Security &amp;
-                                Auth</span>
-                        </div>
-                        <div class="sk-items">
-                            <div class="sk-item"><i class="bx bx-lock-alt sk-iico"></i><span class="sk-iname">JWT</span>
-                            </div>
-                            <div class="sk-item"><i class="bx bx-key sk-iico"></i><span class="sk-iname">bcrypt</span>
-                            </div>
-                            <div class="sk-item"><i class="bx bx-envelope sk-iico"></i><span
-                                    class="sk-iname">Nodemailer</span></div>
-                            <div class="sk-item"><i class="bx bx-pencil sk-iico"></i><span class="sk-iname">API
-                                    Design</span></div>
-                        </div>
-                    </div>
-                    <div class="sk-card r" data-d="2">
-                        <div class="sk-head">
-                            <div class="sk-ico"><i class="bx bx-paint"></i></div><span class="sk-name">Frontend</span>
-                        </div>
-                        <div class="sk-items">
-                            <div class="sk-item"><i class="bx bxl-react sk-iico"></i><span
-                                    class="sk-iname">React.js</span></div>
-                            <div class="sk-item"><i class="bx bxl-html5 sk-iico"></i><span class="sk-iname">HTML5</span>
-                            </div>
-                            <div class="sk-item"><i class="bx bxl-css3 sk-iico"></i><span class="sk-iname">CSS3</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sk-card r" data-d="3">
-                        <div class="sk-head">
-                            <div class="sk-ico"><i class="bx bx-brain"></i></div><span class="sk-name">CS
-                                Foundations</span>
-                        </div>
-                        <div class="sk-items">
-                            <div class="sk-item"><i class="bx bx-layer sk-iico"></i><span class="sk-iname">DSA</span>
-                            </div>
-                            <div class="sk-item"><i class="bx bx-cube sk-iico"></i><span class="sk-iname">OOP</span>
-                            </div>
-                            <div class="sk-item"><i class="bx bx-git-branch sk-iico"></i><span class="sk-iname">System
-                                    Design</span></div>
-                            <div class="sk-item"><i class="bx bx-git-merge sk-iico"></i><span
-                                    class="sk-iname">Event-Driven</span></div>
-                        </div>
-                    </div>
-                    <div class="sk-card r" data-d="4">
-                        <div class="sk-head">
-                            <div class="sk-ico"><i class="bx bx-wrench"></i></div><span class="sk-name">Tools &amp;
-                                Env</span>
-                        </div>
-                        <div class="sk-items">
-                            <div class="sk-item"><i class="bx bxl-git sk-iico"></i><span class="sk-iname">Git</span>
-                            </div>
-                            <div class="sk-item"><i class="bx bxl-github sk-iico"></i><span
-                                    class="sk-iname">GitHub</span></div>
-                            <div class="sk-item"><i class="bx bx-code-block sk-iico"></i><span
-                                    class="sk-iname">Postman</span></div>
-                            <div class="sk-item"><i class="bx bxl-tux sk-iico"></i><span class="sk-iname">Linux</span>
-                            </div>
-                            <div class="sk-item"><i class="bx bx-terminal sk-iico"></i><span class="sk-iname">VS
-                                    Code</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="divider"></div>
-
-        <!-- ═══════════ CONTACT ══════════════════════════════════════ -->
-        <section id="contact">
-            <div class="wrap">
-                <div class="contact-inner r">
-                    <span class="sec-eyebrow">Contact</span>
-                    <h2 class="sec-title">Let's Build Something</h2>
-                    <p class="contact-desc">Actively looking for backend engineering roles and internships. If you're
-                        building infrastructure that needs to scale, I want to be in that room.</p>
-                    <a href="mailto:rashq122@gmail.com" class="contact-email"><i class="bx bx-envelope"></i>
-                        rashq122@gmail.com</a>
-                    <div class="contact-meta">
-                        <span class="cmeta-item"><i class="bx bx-phone"></i>+977 98XXXXXXXX</span>
-                        <span class="cmeta-item"><i class="bx bx-map"></i>Birgunj, Nepal</span>
-                    </div>
-                    <div class="contact-socials">
-                        <a href="https://github.com/rashq-01" target="_blank" rel="noopener" class="soc-btn"><i
-                                class="bx bxl-github"></i>GitHub</a>
-                        <a href="https://linkedin.com/in/rashq" target="_blank" rel="noopener" class="soc-btn"><i
-                                class="bx bxl-linkedin"></i>LinkedIn</a>
-                        <a href="https://leetcode.com/u/rashq_01/" target="_blank" rel="noopener" class="soc-btn"><i class="fa-brands fa-leetcode"></i>LeetCode</a>
-                        <a href="https://x.com/rashq_01" target="_blank" rel="noopener" class="soc-btn"><i
-                                class="bx bxl-twitter"></i>Twitter/X</a>
-                        <a href="https://facebook.com/rashq0" target="_blank" rel="noopener" class="soc-btn"><i
-                                class="bx bxl-facebook"></i>Facebook</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <div class="foot-inner">
-            <span class="foot-left">
-                <span class="kw-punct">&lt;</span><span class="f-name">rajesh</span><span class="kw-punct"> /&gt;</span>
-                <span class="f-sep">&mdash;</span>
-                <span class="f-tag">&#x40;2025</span>
-                <span class="kw-punct">&mdash;</span>
-                <span style="color:var(--tx3)">Built with intention &amp; terminal energy</span>
-            </span>
-            <a href="#home" class="foot-right"><span class="kw-punct">cd</span> <span
-                    style="color:var(--blue)">~/</span> <i class="bx bx-up-arrow-alt"></i></a>
+          </div>
+          <p class="h-desc"><strong>Backend engineer</strong> building distributed infrastructure, real-time platforms,
+            and APIs engineered to handle massive concurrency. I think in systems — not just code.</p>
+          <div class="h-actions">
+            <a href="#work" class="btn btn-a"><i class="bx bx-code-block"></i>See My Work</a>
+            <a href="#contact" class="btn btn-b">Get in Touch</a>
+          </div>
+          <div class="h-soc">
+            <a href="https://github.com/rashq-01" target="_blank" rel="noopener" aria-label="GitHub"><i
+                class="bx bxl-github"></i></a>
+            <a href="https://linkedin.com/in/rashq" target="_blank" rel="noopener" aria-label="LinkedIn"><i
+                class="bx bxl-linkedin"></i></a>
+            <a href="https://leetcode.com/u/rashq_01/" target="_blank" rel="noopener" aria-label="LeetCode"><i
+                class="bx bx-code"></i></a>
+            <a href="https://x.com/rashq_01" target="_blank" rel="noopener" aria-label="X"><i
+                class="bx bxl-twitter"></i></a>
+            <a href="https://facebook.com/rashq0" target="_blank" rel="noopener" aria-label="Facebook"><i
+                class="bx bxl-facebook"></i></a>
+          </div>
+          <div class="h-stats">
+            <div class="stat"><span class="stat-v" id="wsc">0</span><span class="stat-l">msg/sec peak</span></div>
+            <div class="stat"><span class="stat-v">5x</span><span class="stat-l">Node cluster</span></div>
+            <div class="stat"><span class="stat-v">4</span><span class="stat-l">Projects shipped</span></div>
+            <div class="stat"><span class="stat-v">21</span><span class="stat-l">Years old</span></div>
+          </div>
         </div>
-    </footer>
+        <!-- Photo -->
+        <div class="ph-col">
+          <div class="ph-sc">
+            <div class="ph-card" id="pcard">
+              <img src="pic.png" alt="Rajesh Pandit — Backend Systems Engineer">
+              <div class="ph-ov"></div>
+              <div class="ph-sh" id="psh"></div>
+              <div class="ph-top"></div>
+              <div class="ph-sc2"></div>
+              <div class="ph-cn ph-tl"></div>
+              <div class="ph-cn ph-br"></div>
+              <div class="ph-bdg">
+                <div class="ph-dot"></div>
+                <span class="ph-txt">Open to opportunities</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-    <script src="script.js"></script>
+    <div class="div"></div>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="W">
+        <div class="rv from-left">
+          <span class="ey">About</span>
+          <h2 class="st">Who I Am</h2>
+        </div>
+        <div class="ab-grid">
+          <div class="ab-txt rv from-left" data-d="1">
+            <p>I'm a computer science student who spends most of my time thinking about <strong>how systems fail at
+                scale</strong> — and engineering them so they don't. My focus is backend infrastructure: distributed
+              messaging, real-time WebSocket systems, load balancing, and APIs built to survive concurrency.</p>
+            <p>Rather than collecting frameworks, I go deep. I built a production-grade chat platform sustaining
+              <strong>14,500+ messages per second</strong> using Nginx load balancing, Redis Pub/Sub, and a 5-instance
+              Node.js cluster. I write C++ to understand things at the boundary level.</p>
+            <p>Goal: a software engineering role on infrastructure that millions depend on. Sharpening DSA and system
+              design every day.</p>
+            <a href="https://drive.google.com/drive/folders/13wYCy4dZ3_jTerUbkt_yKY6EyJcbz17C?usp=sharing"
+              target="_blank" rel="noopener" class="btn btn-b" style="align-self:flex-start;margin-top:8px">
+              <i class="bx bx-download"></i>Download R&eacute;sum&eacute;
+            </a>
+          </div>
+          <div class="rv from-right" data-d="2">
+            <div class="cp">
+              <div class="cp-bar">
+                <div class="cp-ds"><span class="cpd1"></span><span class="cpd2"></span><span class="cpd3"></span></div>
+                <span class="cp-fn">rajesh.config.json</span>
+              </div>
+              <div class="cp-body">
+                <div class="cp-ln"><span class="ln-n">1</span><span class="lp">{</span></div>
+                <div class="cp-ln"><span class="ln-n">2</span>&nbsp;&nbsp;<span class="ls">"name"</span><span
+                    class="lp">: </span><span class="la">"Rajesh Pandit"</span><span class="lp">,</span></div>
+                <div class="cp-ln"><span class="ln-n">3</span>&nbsp;&nbsp;<span class="ls">"age"</span><span
+                    class="lp">: </span><span class="lc">21</span><span class="lp">,</span></div>
+                <div class="cp-ln"><span class="ln-n">4</span>&nbsp;&nbsp;<span class="ls">"location"</span><span
+                    class="lp">: </span><span class="la">"Birgunj, Nepal"</span><span class="lp">,</span></div>
+                <div class="cp-ln"><span class="ln-n">5</span>&nbsp;&nbsp;<span class="ls">"email"</span><span
+                    class="lp">: </span><span class="lv"><a
+                      href="/cdn-cgi/l/email-protection#f08291839881c1c2c2b0979d91999cde939f9d">"<span
+                        class="__cf_email__"
+                        data-cfemail="86f4e7f5eef7b7b4b4c6e1ebe7efeaa8e5e9eb">[email&#160;protected]</span>"</a></span><span
+                    class="lp">,</span></div>
+                <div class="cp-ln"><span class="ln-n">6</span>&nbsp;&nbsp;<span class="ls">"focus"</span><span
+                    class="lp">: </span><span class="lv">["backend", "systems", "DSA"]</span><span class="lp">,</span>
+                </div>
+                <div class="cp-ln"><span class="ln-n">7</span>&nbsp;&nbsp;<span class="ls">"status"</span><span
+                    class="lp">: </span><span class="lg">"open_to_roles"</span><span class="lp">: </span><span
+                    class="la">true</span></div>
+                <div class="cp-ln"><span class="ln-n">8</span><span class="lp">}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- WORK -->
+    <section id="work">
+      <div class="W">
+        <div class="rv">
+          <span class="ey">Selected Work</span>
+          <h2 class="st">Projects</h2>
+          <p class="ss">Systems I've built — defined problem, measurable result, intentional architecture.</p>
+        </div>
+        <div class="pj-grid">
+          <article class="pj rv" data-d="1">
+            <div class="pj-img">
+              <img src="NexusChat.jpeg" alt="NexusChat" loading="lazy">
+              <div class="pj-imgov"></div><span class="pj-ft">Featured</span>
+            </div>
+            <div class="pj-body">
+              <div class="pj-top"><span class="pj-n">01</span><span class="pj-c">Distributed Systems</span></div>
+              <h3 class="pj-name">NexusChat</h3>
+              <p class="pj-sub">// distributed real-time messaging platform</p>
+              <div class="pj-metric"><span class="pm-v">14,500+</span><span class="pm-l">WebSocket msg/sec
+                  sustained</span></div>
+              <p class="pj-desc">Nginx load balancing across 5 Node.js instances. Redis Pub/Sub syncs all nodes —
+                horizontal scaling without message loss. JWT auth, real-time presence, room management.</p>
+              <div class="pj-stack">
+                <span>Node.js</span><span>Express</span><span>Socket.IO</span><span>MongoDB</span><span>Redis</span><span>Nginx</span><span>JWT</span>
+              </div>
+              <div class="pj-foot"><a href="https://github.com/rashq-01/NexusChat.git" target="_blank" rel="noopener"
+                  class="pj-lnk">view_source() <i class="bx bx-link-external"></i></a></div>
+            </div>
+          </article>
+          <article class="pj rv" data-d="2">
+            <div class="pj-img">
+              <img src="libraTech.png" alt="LibraTech" loading="lazy">
+              <div class="pj-imgov"></div>
+            </div>
+            <div class="pj-body">
+              <div class="pj-top"><span class="pj-n">02</span><span class="pj-c">Full Stack</span></div>
+              <h3 class="pj-name">LibraTech</h3>
+              <p class="pj-sub">// role-based library management system</p>
+              <p class="pj-desc">RBAC (admin/member), JWT auth, automated issue/return workflows, real-time availability
+                dashboard. Clean separation between admin and member interfaces.</p>
+              <div class="pj-stack">
+                <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Node.js</span><span>Express</span><span>MongoDB</span><span>JWT</span>
+              </div>
+              <div class="pj-foot"><a href="https://github.com/rashq-01/Library-Management-System.git" target="_blank"
+                  rel="noopener" class="pj-lnk">view_source() <i class="bx bx-link-external"></i></a></div>
+            </div>
+          </article>
+          <article class="pj rv" data-d="3">
+            <div class="pj-img">
+              <img src="airBNB.webp" alt="Airbnb Clone" loading="lazy">
+              <div class="pj-imgov"></div>
+            </div>
+            <div class="pj-body">
+              <div class="pj-top"><span class="pj-n">03</span><span class="pj-c">Full Stack</span></div>
+              <h3 class="pj-name">Airbnb Clone</h3>
+              <p class="pj-sub">// full-stack property rental platform</p>
+              <p class="pj-desc">Secure auth, property listings, search filters, booking management, user dashboards.
+                SSR with EJS for fast initial load and clean URL routing.</p>
+              <div class="pj-stack">
+                <span>Node.js</span><span>Express</span><span>EJS</span><span>MongoDB</span><span>CSS</span><span>REST
+                  API</span></div>
+              <div class="pj-foot"><a href="https://github.com/rashq-01/Air_BNB_Clone.git" target="_blank"
+                  rel="noopener" class="pj-lnk">view_source() <i class="bx bx-link-external"></i></a></div>
+            </div>
+          </article>
+          <article class="pj rv" data-d="4">
+            <div class="pj-img">
+              <img
+                src="https://5.imimg.com/data5/SELLER/Default/2024/4/412012786/UZ/RT/CT/37169537/library-management-system-1000x1000.png"
+                alt="Library CLI" loading="lazy">
+              <div class="pj-imgov"></div>
+            </div>
+            <div class="pj-body">
+              <div class="pj-top"><span class="pj-n">04</span><span class="pj-c">Systems / C++</span></div>
+              <h3 class="pj-name">Library CLI</h3>
+              <p class="pj-sub">// systems-level C++ with file persistence</p>
+              <p class="pj-desc">CLI library system: file persistence, OOP class hierarchies, full record management.
+                Built to understand memory and data handling at the boundary level.</p>
+              <div class="pj-stack"><span>C++</span><span>OOP</span><span>File I/O</span><span>CLI</span></div>
+              <div class="pj-foot"><a
+                  href="https://github.com/rashq-01/currentProject/tree/80ffbad4bf76bef0c992a70555a10b2131bf1450/2_Library_Management"
+                  target="_blank" rel="noopener" class="pj-lnk">view_source() <i class="bx bx-link-external"></i></a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="W">
+        <div class="rv">
+          <span class="ey">Expertise</span>
+          <h2 class="st">Technical Skills</h2>
+          <p class="ss">Every skill here has been shipped in real code. Organized by system layer.</p>
+        </div>
+        <div class="sk-grid">
+          <div class="sk rv" data-d="1">
+            <div class="sk-hd">
+              <div class="sk-ico"><i class="bx bx-server"></i></div><span class="sk-nm">Backend &amp; Runtime</span>
+            </div>
+            <div class="sk-items">
+              <div class="sk-it"><i class="bx bxl-nodejs sk-ii"></i><span class="sk-in">Node.js</span></div>
+              <div class="sk-it"><i class="bx bx-extension sk-ii"></i><span class="sk-in">Express.js</span></div>
+              <div class="sk-it"><i class="bx bx-plug sk-ii"></i><span class="sk-in">Socket.IO</span></div>
+              <div class="sk-it"><i class="bx bx-wifi sk-ii"></i><span class="sk-in">WebSockets</span></div>
+              <div class="sk-it"><i class="bx bx-transfer sk-ii"></i><span class="sk-in">REST APIs</span></div>
+            </div>
+          </div>
+          <div class="sk rv" data-d="2">
+            <div class="sk-hd">
+              <div class="sk-ico"><i class="bx bx-network-chart"></i></div><span class="sk-nm">Infrastructure &amp;
+                Scale</span>
+            </div>
+            <div class="sk-items">
+              <div class="sk-it"><i class="bx bx-shield-quarter sk-ii"></i><span class="sk-in">Nginx</span></div>
+              <div class="sk-it"><i class="bx bx-sitemap sk-ii"></i><span class="sk-in">Load Balancing</span></div>
+              <div class="sk-it"><i class="bx bx-expand sk-ii"></i><span class="sk-in">Horizontal Scaling</span></div>
+              <div class="sk-it"><i class="bx bx-mail-send sk-ii"></i><span class="sk-in">Pub/Sub</span></div>
+              <div class="sk-it"><i class="bx bx-chip sk-ii"></i><span class="sk-in">Caching</span></div>
+            </div>
+          </div>
+          <div class="sk rv" data-d="3">
+            <div class="sk-hd">
+              <div class="sk-ico"><i class="bx bx-data"></i></div><span class="sk-nm">Data &amp; Storage</span>
+            </div>
+            <div class="sk-items">
+              <div class="sk-it"><i class="bx bxl-mongodb sk-ii"></i><span class="sk-in">MongoDB</span></div>
+              <div class="sk-it"><i class="bx bx-memory-card sk-ii"></i><span class="sk-in">Redis</span></div>
+              <div class="sk-it"><i class="bx bx-table sk-ii"></i><span class="sk-in">MySQL</span></div>
+              <div class="sk-it"><i class="bx bx-bar-chart-alt-2 sk-ii"></i><span class="sk-in">Indexing</span></div>
+            </div>
+          </div>
+          <div class="sk rv" data-d="4">
+            <div class="sk-hd">
+              <div class="sk-ico"><i class="bx bx-code-alt"></i></div><span class="sk-nm">Languages</span>
+            </div>
+            <div class="sk-items">
+              <div class="sk-it"><i class="bx bxl-javascript sk-ii"></i><span class="sk-in">JavaScript</span></div>
+              <div class="sk-it"><i class="bx bxl-c-plus-plus sk-ii"></i><span class="sk-in">C++</span></div>
+              <div class="sk-it"><i class="bx bx-code-curly sk-ii"></i><span class="sk-in">C</span></div>
+              <div class="sk-it"><i class="bx bxl-python sk-ii"></i><span class="sk-in">Python</span></div>
+            </div>
+          </div>
+          <div class="sk rv" data-d="1">
+            <div class="sk-hd">
+              <div class="sk-ico"><i class="bx bx-shield"></i></div><span class="sk-nm">Security &amp; Auth</span>
+            </div>
+            <div class="sk-items">
+              <div class="sk-it"><i class="bx bx-lock-alt sk-ii"></i><span class="sk-in">JWT</span></div>
+              <div class="sk-it"><i class="bx bx-key sk-ii"></i><span class="sk-in">bcrypt</span></div>
+              <div class="sk-it"><i class="bx bx-envelope sk-ii"></i><span class="sk-in">Nodemailer</span></div>
+              <div class="sk-it"><i class="bx bx-pencil sk-ii"></i><span class="sk-in">API Design</span></div>
+            </div>
+          </div>
+          <div class="sk rv" data-d="2">
+            <div class="sk-hd">
+              <div class="sk-ico"><i class="bx bx-paint"></i></div><span class="sk-nm">Frontend</span>
+            </div>
+            <div class="sk-items">
+              <div class="sk-it"><i class="bx bxl-react sk-ii"></i><span class="sk-in">React.js</span></div>
+              <div class="sk-it"><i class="bx bxl-html5 sk-ii"></i><span class="sk-in">HTML5</span></div>
+              <div class="sk-it"><i class="bx bxl-css3 sk-ii"></i><span class="sk-in">CSS3</span></div>
+            </div>
+          </div>
+          <div class="sk rv" data-d="3">
+            <div class="sk-hd">
+              <div class="sk-ico"><i class="bx bx-brain"></i></div><span class="sk-nm">CS Foundations</span>
+            </div>
+            <div class="sk-items">
+              <div class="sk-it"><i class="bx bx-layer sk-ii"></i><span class="sk-in">DSA</span></div>
+              <div class="sk-it"><i class="bx bx-cube sk-ii"></i><span class="sk-in">OOP</span></div>
+              <div class="sk-it"><i class="bx bx-git-branch sk-ii"></i><span class="sk-in">System Design</span></div>
+              <div class="sk-it"><i class="bx bx-git-merge sk-ii"></i><span class="sk-in">Event-Driven</span></div>
+            </div>
+          </div>
+          <div class="sk rv" data-d="4">
+            <div class="sk-hd">
+              <div class="sk-ico"><i class="bx bx-wrench"></i></div><span class="sk-nm">Tools &amp; Env</span>
+            </div>
+            <div class="sk-items">
+              <div class="sk-it"><i class="bx bxl-git sk-ii"></i><span class="sk-in">Git</span></div>
+              <div class="sk-it"><i class="bx bxl-github sk-ii"></i><span class="sk-in">GitHub</span></div>
+              <div class="sk-it"><i class="bx bx-code-block sk-ii"></i><span class="sk-in">Postman</span></div>
+              <div class="sk-it"><i class="bx bxl-tux sk-ii"></i><span class="sk-in">Linux</span></div>
+              <div class="sk-it"><i class="bx bx-terminal sk-ii"></i><span class="sk-in">VS Code</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="W">
+        <div class="ct-inner rv">
+          <span class="ey">Contact</span>
+          <h2 class="st">Let's Build Something</h2>
+          <p class="ct-desc">Actively looking for backend engineering roles and internships. If you're building infra
+            that needs to scale, I want to be in that room.</p>
+          <div class="ct-email-row">
+            <a href="/cdn-cgi/l/email-protection#60120113081151525220070d01090c4e030f0d" class="ct-email"><i
+                class="bx bx-envelope"></i><span class="__cf_email__"
+                data-cfemail="88fae9fbe0f9b9babac8efe5e9e1e4a6ebe7e5">[email&#160;protected]</span></a>
+            <button class="copy-btn" id="copy-btn" onclick="copyEmail()">
+              <i class="bx bx-copy" id="copy-icon"></i><span id="copy-txt">Copy</span>
+            </button>
+          </div>
+          <div class="ct-meta">
+            <span class="ct-mi"><i class="bx bx-phone"></i>+977 98XXXXXXXX</span>
+            <span class="ct-mi"><i class="bx bx-map"></i>Birgunj, Nepal</span>
+          </div>
+          <div class="ct-soc">
+            <a href="https://github.com/rashq-01" target="_blank" rel="noopener" class="soc"><i
+                class="bx bxl-github"></i>GitHub</a>
+            <a href="https://linkedin.com/in/rashq" target="_blank" rel="noopener" class="soc"><i
+                class="bx bxl-linkedin"></i>LinkedIn</a>
+            <a href="https://leetcode.com/u/rashq_01/" target="_blank" rel="noopener" class="soc"><i
+                class="bx bx-code"></i>LeetCode</a>
+            <a href="https://x.com/rashq_01" target="_blank" rel="noopener" class="soc"><i
+                class="bx bxl-twitter"></i>Twitter/X</a>
+            <a href="https://facebook.com/rashq0" target="_blank" rel="noopener" class="soc"><i
+                class="bx bxl-facebook"></i>Facebook</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="ft">
+      <span class="ft-l">
+        <span class="fa">&lt;</span><span class="fa">rajesh</span><span class="fa">/&gt;</span>
+        <span style="color:var(--tx3)"> &mdash; </span>
+        <span class="fb">&#64;2025</span>
+        <span style="color:var(--tx3)"> &mdash; </span>
+        <span class="fc">built with terminal energy</span>
+      </span>
+      <span class="ft-r" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        cd ~/<i class="bx bx-up-arrow-alt"></i>
+      </span>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>

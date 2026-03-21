@@ -1,197 +1,548 @@
 (function () {
-            "use strict";
+  "use strict";
+  const D = document,
+    H = D.documentElement;
 
-            /* 1 ─── THEME ──────────────────────────────────────── */
-            const H = document.documentElement, TG = document.getElementById("theme-toggle");
-            const stored = localStorage.getItem("rp-theme");
-            const sysDark = window.matchMedia("(prefers-color-scheme:dark)").matches;
-            H.setAttribute("data-theme", stored || (sysDark ? "dark" : "light"));
-            TG.addEventListener("click", () => {
-                const n = H.getAttribute("data-theme") === "dark" ? "light" : "dark";
-                H.setAttribute("data-theme", n);
-                localStorage.setItem("rp-theme", n);
-            });
-            window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change", e => {
-                if (!localStorage.getItem("rp-theme")) H.setAttribute("data-theme", e.matches ? "dark" : "light");
-            });
+  /* ══ 1. BOOT SCREEN ═══════════════════════════════════════════ */
+  const bootEl = D.getElementById("boot"),
+    bbar = D.getElementById("bbar"),
+    btxt = D.getElementById("btxt");
+  const bootMsgs = [
+    "Initializing runtime...",
+    "Loading Node.js cluster...",
+    "Connecting Redis Pub/Sub...",
+    "Binding Nginx upstream...",
+    "Compiling personality.cpp...",
+    "Portfolio ready.",
+  ];
+  let bi = 0,
+    bp = 0;
+  function bootStep() {
+    if (bi >= bootMsgs.length) {
+      setTimeout(() => {
+        bootEl.classList.add("done");
+      }, 400);
+      return;
+    }
+    btxt.textContent = bootMsgs[bi++];
+    bp = Math.min(bp + Math.floor(100 / bootMsgs.length) + 1, 100);
+    bbar.style.width = bp + "%";
+    setTimeout(bootStep, bi === bootMsgs.length ? 600 : 320);
+  }
+  setTimeout(bootStep, 200);
 
-            /* 2 ─── CANVAS (code particles, all sections) ──────── */
-            const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
-            let W, H2, particles = [];
-            const WORDS = [
-                "function", "const", "let", "var", "return", "async", "await", "class", "import", "export",
-                "null", "undefined", "true", "false", "for", "while", "if", "else", "switch", "try", "catch",
-                "throw", "new", "delete", "typeof", "instanceof", "void", "break", "continue", "default",
-                "{}", "[]", "()", "=>", "...", "??", "?.", "!==", "===", ">=", "<=", "&&", "||", "++", "--",
-                "0x1F", "0xFF", "01", "10", "11", "100", "404", "500", "200", "3000", "8080",
-                "redis", "nginx", "node", "socket", "jwt", "docker", "linux", "bash", "curl", "grep",
-                "dist", "pub", "sub", "api", "cdn", "tcp", "http", "ssh", "git", "push", "pull", "fetch",
-                "cluster", "worker", "thread", "mutex", "queue", "stack", "heap", "buffer", "stream",
-                "require()", "module", "process", "console", "Promise", "callback", "event", "emit",
-                "SELECT", "INSERT", "UPDATE", "DELETE", "WHERE", "JOIN", "INDEX", "mongo", "schema",
-                "ping", "pong", "ACK", "SYN", "GET", "POST", "PUT", "PATCH", "DELETE", "ws://", "http://",
-                "npm", "yarn", "node_modules", ".env", "config", "deploy", "build", "test", "lint",
-                "#include", "<vector>", "std::", "int main()", "printf", "malloc", "free", "ptr",
-                "O(n)", "O(1)", "O(log n)", "O(n²)", "hash", "sort", "BFS", "DFS", "DP", "graph",
-            ];
-            function resize() { W = cv.width = window.innerWidth; H2 = cv.height = window.innerHeight; initP() }
-            function isDark() { return H.getAttribute("data-theme") === "dark" }
-            function initP() {
-                particles = [];
-                const n = Math.max(80, Math.floor(W * H2 / 7000));
-                for (let i = 0; i < n; i++) particles.push(mkP(true));
-            }
-            function mkP(rand) {
-                return {
-                    x: Math.random() * W,
-                    y: rand ? Math.random() * H2 : H2 + 20,
-                    vx: (Math.random() - .5) * .25,
-                    vy: -(Math.random() * 1.2 + .6),
-                    word: WORDS[Math.floor(Math.random() * WORDS.length)],
-                    size: Math.random() * 4 + 9,
-                    alpha: Math.random() * .35 + .06,
-                    life: rand ? Math.random() : 0
-                };
-            }
-            function drawCanvas() {
-                ctx.clearRect(0, 0, W, H2);
-                const dark = isDark();
-                // Two particle colours: blue (primary) + green (secondary, fewer)
-                particles.forEach((p, i) => {
-                    p.x += p.vx; p.y += p.vy; p.life += .0008;
-                    if (p.y < -30 || p.life > 1) { const np = mkP(false); Object.assign(p, np) }
-                    const fade = p.life < 0.7 ? p.life / 0.7 : 1 - (p.life - 0.7) / 0.3;
-                    const a = p.alpha * Math.max(0, fade);
-                    if (a <= 0) return;
-                    const isGreen = i % 5 === 0;
-                    let col;
-                    if (dark) col = isGreen ? `rgba(0,255,65,${a})` : `rgba(54,123,240,${a})`;
-                    else col = isGreen ? `rgba(0,180,40,${a})` : `rgba(30,90,200,${a})`;
-                    ctx.save();
-                    ctx.font = `${p.size}px "JetBrains Mono",monospace`;
-                    ctx.fillStyle = col;
-                    ctx.fillText(p.word, p.x, p.y);
-                    ctx.restore();
-                });
-                requestAnimationFrame(drawCanvas);
-            }
-            window.addEventListener("resize", resize, { passive: true });
-            resize(); drawCanvas();
+  /* ══ 2. THEME ══════════════════════════════════════════════════ */
+  const stored = localStorage.getItem("rp");
+  const sysDark = window.matchMedia("(prefers-color-scheme:dark)").matches;
+  H.setAttribute("data-theme", stored || (sysDark ? "dark" : "light"));
+  D.getElementById("tgl").addEventListener("click", () => {
+    const n = H.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    H.setAttribute("data-theme", n);
+    localStorage.setItem("rp", n);
+  });
 
-            /* 3 ─── NAV ─────────────────────────────────────────── */
-            const nav = document.getElementById("nav");
-            function updateNav() { nav.classList.toggle("solid", scrollY > 30) }
-            window.addEventListener("scroll", updateNav, { passive: true });
-            updateNav();
+  /* ══ 3. CANVAS — VS Code syntax snippets ══════════════════════ */
+  const cv = D.getElementById("cv"),
+    cx = cv.getContext("2d");
+  let W,
+    Ht,
+    pts = [];
 
-            /* 4 ─── ACTIVE NAV LINK ─────────────────────────────── */
-            const secs = [...document.querySelectorAll("section[id]")];
-            const links = [...document.querySelectorAll(".nav-links a")];
-            new IntersectionObserver(es => {
-                es.forEach(e => {
-                    if (e.isIntersecting) {
-                        links.forEach(a => a.classList.remove("active"));
-                        const a = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
-                        if (a) a.classList.add("active");
-                    }
-                });
-            }, { threshold: .45 }).observe(secs[0] || document.body);
-            secs.forEach(s => {
-                new IntersectionObserver(([e]) => {
-                    if (e.isIntersecting) {
-                        links.forEach(a => a.classList.remove("active"));
-                        const a = document.querySelector(`.nav-links a[href="#${s.id}"]`);
-                        if (a) a.classList.add("active");
-                    }
-                }, { threshold: .45 }).observe(s);
-            });
+  /* VS Code Dark+ colour palette */
+  const C = {
+    kw: "#569cd6" /* keyword     — blue   */,
+    fn: "#dcdcaa" /* function    — yellow */,
+    st: "#ce9178" /* string      — orange */,
+    nm: "#b5cea8" /* number      — green  */,
+    cm: "#6a9955" /* comment     — green  */,
+    tp: "#4ec9b0" /* type/class  — teal   */,
+    vr: "#9cdcfe" /* variable    — cyan   */,
+    op: "#d4d4d4" /* operator    — white  */,
+    pm: "#c586c0" /* param       — violet */,
+    gr: "#00ff88" /* accent      — matrix */,
+    cy: "#00e5ff" /* cyan        — accent */,
+  };
 
-            /* 5 ─── BURGER / MOBILE MENU ──────────────────────── */
-            const burger = document.getElementById("burger");
-            const drawer = document.getElementById("mob-drawer");
-            const scrim = document.getElementById("mob-scrim");
+  /* Real multi-token code snippets.
+   Each snippet is an array of [text, colorKey] pairs */
+  const SNIPS = [
+    [
+      [" const ", " kw"],
+      ["db", " vr"],
+      [" = ", " op"],
+      ["await ", " kw"],
+      ["connect()", " fn"],
+    ],
+    [
+      [" function ", " kw"],
+      ["handler", " fn"],
+      ["(req, res)", " pm"],
+      [" {", " op"],
+    ],
+    [
+      [" if ", " kw"],
+      ["(err)", " vr"],
+      [" return ", " kw"],
+      ["null", " nm"],
+    ],
+    [
+      [" const ", " kw"],
+      ["port", " vr"],
+      [" = ", " op"],
+      ["process", " tp"],
+      [".env.PORT", " vr"],
+    ],
+    [
+      [" redis", " tp"],
+      [".pub", " vr"],
+      ["(", " op"],
+      ["channel", " vr"],
+      [")", " op"],
+    ],
+    [
+      [" async ", " kw"],
+      ["function ", " kw"],
+      ["scale", " fn"],
+      ["() {", " op"],
+    ],
+    [
+      [" nginx", " st"],
+      ["upstream ", " kw"],
+      ["cluster", " tp"],
+      [" {", " op"],
+    ],
+    [
+      [" O(log n)", " gr"],
+      [" // binary search", " cm"],
+    ],
+    [
+      [" <T>", " tp"],
+      ["extends ", " kw"],
+      ["Base", " tp"],
+      [" {", " op"],
+    ],
+    [
+      [" socket", " vr"],
+      [".emit", " fn"],
+      ["(", " op"],
+      ["'msg'", " st"],
+      [", data)", " vr"],
+    ],
+    [
+      [" import ", " kw"],
+      ["{", " op"],
+      ["Redis", " tp"],
+      ["}", " op"],
+      [" from ", " kw"],
+      ["'ioredis'", " st"],
+    ],
+    [
+      [" return ", " kw"],
+      ["res", " vr"],
+      [".status", " fn"],
+      ["(200)", " nm"],
+      [".json", " fn"],
+      ["()", " op"],
+    ],
+    [
+      [" const ", " kw"],
+      ["token", " vr"],
+      [" = ", " op"],
+      ["jwt", " tp"],
+      [".sign", " fn"],
+      ["()", " op"],
+    ],
+    [
+      [" while ", " kw"],
+      ["(queue", " vr"],
+      [".length)", " vr"],
+      [" {", " op"],
+    ],
+    [
+      [" bcrypt", " tp"],
+      [".hash", " fn"],
+      ["(pass,", " pm"],
+      ["12)", " nm"],
+    ],
+    [
+      [" class ", " kw"],
+      ["Server", " tp"],
+      [" extends ", " kw"],
+      ["EventEmitter", " tp"],
+    ],
+    [
+      [" #include", " kw"],
+      ["<iostream>", " st"],
+    ],
+    [
+      [" malloc", " fn"],
+      ["(sizeof", " kw"],
+      ["(Node)", " tp"],
+      [")", " op"],
+    ],
+    [
+      [" nginx", " vr"],
+      [".conf", " st"],
+      ["  worker_processes", " kw"],
+      ["  4", " nm"],
+    ],
+    [
+      [" pub", " vr"],
+      [".subscribe", " fn"],
+      ["(", " op"],
+      ["'events'", " st"],
+      [")", " op"],
+    ],
+    [
+      [" SELECT", " kw"],
+      ["*", " op"],
+      [" FROM", " kw"],
+      ["users", " vr"],
+      [" WHERE", " kw"],
+      ["active", " vr"],
+    ],
+    [
+      [" 0xFF", " nm"],
+      ["  &&  ", " op"],
+      ["0b1010", " nm"],
+    ],
+    [
+      [" try ", " kw"],
+      ["{", " op"],
+      ["  await", " kw"],
+      ["db", " vr"],
+      [".save()", " fn"],
+    ],
+    [
+      [" catch", " kw"],
+      ["(err)", " pm"],
+      [" {", " op"],
+      ["  throw", " kw"],
+      ["new", " kw"],
+      ["Error", " tp"],
+    ],
+    [
+      [" @Controller", " pm"],
+      ["(", " op"],
+      ["'/api'", " st"],
+      [")", " op"],
+    ],
+    [
+      [" let ", " kw"],
+      ["i", " vr"],
+      [" = ", " op"],
+      ["0", " nm"],
+      ["; i < ", " op"],
+      ["n", " vr"],
+      ["; i++", " op"],
+    ],
+  ];
 
-            function openMenu() {
-                burger.classList.add("open");
-                burger.setAttribute("aria-expanded", "true");
-                drawer.classList.add("open");
-                drawer.setAttribute("aria-hidden", "false");
-                document.body.style.overflow = "hidden";
-            }
-            function closeMenu() {
-                burger.classList.remove("open");
-                burger.setAttribute("aria-expanded", "false");
-                drawer.classList.remove("open");
-                drawer.setAttribute("aria-hidden", "true");
-                document.body.style.overflow = "";
-            }
-            burger.addEventListener("click", () => {
-                drawer.classList.contains("open") ? closeMenu() : openMenu();
-            });
-            scrim.addEventListener("click", closeMenu);
-            document.querySelectorAll(".mob-panel a").forEach(a => a.addEventListener("click", closeMenu));
-            window.addEventListener("resize", () => { if (innerWidth > 768) closeMenu() });
+  function mkSnip() {
+    const snip = SNIPS[Math.floor(Math.random() * SNIPS.length)];
+    return {
+      x: Math.random() * W,
+      y: Math.random() * Ht,
+      vy: -(Math.random() * 0.55 + 0.18),
+      vx: (Math.random() - 0.5) * 0.12,
+      snip: snip,
+      sz: Math.random() * 3 + 13 /* font size 13-16px — bigger & clearer */,
+      al: Math.random() * 0.35 + 0.18 /* base alpha 0.18–0.53 — more visible */,
+      lf: Math.random(),
+    };
+  }
+  function res() {
+    W = cv.width = innerWidth;
+    Ht = cv.height = innerHeight;
+    pts = [];
+    const n = Math.max(35, Math.floor((W * Ht) / 9000));
+    for (let i = 0; i < n; i++) pts.push(mkSnip());
+  }
+  function drw() {
+    cx.clearRect(0, 0, W, Ht);
+    const dk = H.getAttribute("data-theme") === "dark";
+    const alpha_scale = dk ? 1 : 0.55;
 
-            /* 6 ─── REVEAL ON SCROLL ────────────────────────────── */
-            new IntersectionObserver((es, obs) => {
-                es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("up"); obs.unobserve(e.target) } });
-            }, { threshold: .08, rootMargin: "0px 0px -16px 0px" }).observe(document.body);
-            // Re-observe all .r elements
-            const revEls = document.querySelectorAll(".r");
-            const revIO = new IntersectionObserver((es, obs) => {
-                es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("up"); obs.unobserve(e.target) } });
-            }, { threshold: .08, rootMargin: "0px 0px -16px 0px" });
-            revEls.forEach(el => revIO.observe(el));
+    pts.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.lf += 0.002;
+      if (p.y < -40 || p.lf > 1) {
+        const fresh = mkSnip();
+        fresh.y = Ht + 20;
+        fresh.lf = 0;
+        Object.assign(p, fresh);
+      }
+      /* gentler fade — stays visible longer through the lifecycle */
+      const fade = Math.max(0, 1 - Math.pow(Math.abs(p.lf - 0.5) * 2, 2.5));
+      const baseA = p.al * fade * alpha_scale;
+      if (baseA <= 0.015) return;
 
-            /* 7 ─── TYPED.JS ─────────────────────────────────────── */
-            if (document.getElementById("typed-el")) {
-                new Typed("#typed-el", {
-                    strings: ["./run nexus-chat --workers 5", "git pull origin --rebase", "npm start --env production", "redis-cli SUBSCRIBE events", "./benchmark --rps 14500", "ssh rajesh@backend-01"],
-                    typeSpeed: 50, backSpeed: 25, backDelay: 1500, loop: true, showCursor: false
-                });
-            }
+      cx.save();
+      cx.font = `${p.sz}px "JetBrains Mono",monospace`;
+      cx.textBaseline = "alphabetic";
 
-            /* 8 ─── COUNTER ──────────────────────────────────────── */
-            const wsEl = document.getElementById("ws-counter");
-            if (wsEl) {
-                let done = false;
-                new IntersectionObserver(([e]) => {
-                    if (e.isIntersecting && !done) {
-                        done = true;
-                        const s = performance.now(), T = 14500, D = 1800;
-                        (function t(now) {
-                            const p = Math.min((now - s) / D, 1);
-                            wsEl.textContent = Math.round(T * (1 - Math.pow(1 - p, 3))).toLocaleString();
-                            if (p < 1) requestAnimationFrame(t); else wsEl.textContent = T.toLocaleString();
-                        })(s);
-                    }
-                }, { threshold: .6 }).observe(wsEl);
-            }
+      let curX = p.x;
+      p.snip.forEach(([txt, ckey]) => {
+        let hex = C[ckey.trim()] || C.op;
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        cx.fillStyle = `rgba(${r},${g},${b},${baseA})`;
+        cx.fillText(txt, curX, p.y);
+        curX += cx.measureText(txt).width;
+      });
+      cx.restore();
+    });
+    requestAnimationFrame(drw);
+  }
+  addEventListener("resize", res, { passive: true });
+  res();
+  drw();
 
-            /* 9 ─── 3D TILT — PHOTO ONLY ────────────────────────── */
-            const pc = document.getElementById("photo-card");
-            const ps = document.getElementById("photo-sheen");
-            if (pc && !("ontouchstart" in window)) {
-                pc.parentElement.style.perspective = "1000px";
-                let tRx = 0, tRy = 0, cRx = 0, cRy = 0, raf = null, on = false;
-                function lerp(a, b, t) { return a + (b - a) * t }
-                function loop() {
-                    cRx = lerp(cRx, tRx, on ? .12 : .07);
-                    cRy = lerp(cRy, tRy, on ? .12 : .07);
-                    const sc = on ? 1.04 : 1;
-                    pc.style.transform = `rotateX(${cRx}deg) rotateY(${cRy}deg) scale3d(${sc},${sc},${sc})`;
-                    if (Math.abs(cRx - tRx) > .008 || Math.abs(cRy - tRy) > .008 || on) raf = requestAnimationFrame(loop);
-                    else { pc.style.transform = ""; raf = null }
-                }
-                function go() { if (!raf) raf = requestAnimationFrame(loop) }
-                pc.addEventListener("mouseenter", () => { on = true; pc.classList.add("ton"); pc.classList.remove("toff"); if (ps) ps.style.setProperty("--sop", "1"); go() });
-                pc.addEventListener("mousemove", e => {
-                    const r = pc.getBoundingClientRect();
-                    tRy = (e.clientX - r.left - r.width / 2) / (r.width / 2) * 13;
-                    tRx = -(e.clientY - r.top - r.height / 2) / (r.height / 2) * 13;
-                    if (ps) { ps.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100).toFixed(1) + "%"); ps.style.setProperty("--my", ((e.clientY - r.top) / r.height * 100).toFixed(1) + "%") }
-                });
-                pc.addEventListener("mouseleave", () => { on = false; tRx = 0; tRy = 0; pc.classList.remove("ton"); pc.classList.add("toff"); if (ps) ps.style.setProperty("--sop", "0"); go(); setTimeout(() => pc.classList.remove("toff"), 650) });
-            }
+  /* ══ SPOTLIGHT — cursor radial glow ══════════════════════════ */
+  const spl = D.getElementById("spotlight");
+  if (spl) {
+    addEventListener(
+      "mousemove",
+      (e) => {
+        spl.style.setProperty("--sx", e.clientX + "px");
+        spl.style.setProperty("--sy", e.clientY + "px");
+      },
+      { passive: true },
+    );
+  }
 
-        })();
+  /* ══ 4. SCROLL PROGRESS + BACK TO TOP ═════════════════════════ */
+  const prog = D.getElementById("progress"),
+    btt = D.getElementById("btt");
+  const nav = D.getElementById("nav");
+  function onScroll() {
+    const scrolled = (scrollY / (D.body.scrollHeight - innerHeight)) * 100;
+    prog.style.width = scrolled + "%";
+    btt.classList.toggle("show", scrollY > 400);
+    nav.classList.toggle("sticky", scrollY > 28);
+  }
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* ══ 5. ACTIVE NAV ═════════════════════════════════════════════ */
+  const secs = [...D.querySelectorAll("section[id]")];
+  const lks = [...D.querySelectorAll(".nav-links a")];
+  secs.forEach((s) => {
+    new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          lks.forEach((a) => a.classList.remove("act"));
+          const a = D.querySelector(`.nav-links a[href="#${s.id}"]`);
+          if (a) a.classList.add("act");
+        }
+      },
+      { threshold: 0.45 },
+    ).observe(s);
+  });
+
+  /* ══ 6. BURGER ═════════════════════════════════════════════════ */
+  const burg = D.getElementById("burg"),
+    mdrw = D.getElementById("mdrw"),
+    mscrim = D.getElementById("mscrim");
+  function openM() {
+    burg.classList.add("open");
+    burg.setAttribute("aria-expanded", "true");
+    mdrw.classList.add("open");
+    mdrw.setAttribute("aria-hidden", "false");
+    D.body.style.overflow = "hidden";
+  }
+  function closeM() {
+    burg.classList.remove("open");
+    burg.setAttribute("aria-expanded", "false");
+    mdrw.classList.remove("open");
+    mdrw.setAttribute("aria-hidden", "true");
+    D.body.style.overflow = "";
+  }
+  burg.addEventListener("click", () =>
+    mdrw.classList.contains("open") ? closeM() : openM(),
+  );
+  mscrim.addEventListener("click", closeM);
+  D.querySelectorAll(".mpnl a").forEach((a) =>
+    a.addEventListener("click", closeM),
+  );
+  addEventListener("resize", () => {
+    if (innerWidth > 768) closeM();
+  });
+
+  /* ══ 7. REVEAL — bidirectional ═════════════════════════════════ */
+  const rvIO = new IntersectionObserver(
+    (es, o) => {
+      es.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("on");
+          o.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.08, rootMargin: "0px 0px -16px 0px" },
+  );
+  D.querySelectorAll(".rv").forEach((el) => rvIO.observe(el));
+
+  /* ══ 8. TYPED.JS ═══════════════════════════════════════════════ */
+  if (D.getElementById("typed-el")) {
+    new Typed("#typed-el", {
+      strings: [
+        "./run nexus-chat --workers=5",
+        "git commit -m 'feat: 14k rps'",
+        "redis-cli SUBSCRIBE events",
+        "npm start --env=production",
+        "ssh -i key.pem rajesh@backend",
+        "./benchmark --ws --rps=15000",
+      ],
+      typeSpeed: 48,
+      backSpeed: 24,
+      backDelay: 1400,
+      loop: true,
+      showCursor: false,
+    });
+  }
+
+  /* ══ 9. COUNTER ════════════════════════════════════════════════ */
+  const wsc = D.getElementById("wsc");
+  if (wsc) {
+    let done = false;
+    new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting && !done) {
+          done = true;
+          const s = performance.now(),
+            T = 14500,
+            DU = 1800;
+          (function t(now) {
+            const p = Math.min((now - s) / DU, 1);
+            wsc.textContent = Math.round(
+              T * (1 - Math.pow(1 - p, 3)),
+            ).toLocaleString();
+            if (p < 1) requestAnimationFrame(t);
+            else wsc.textContent = T.toLocaleString();
+          })(s);
+        }
+      },
+      { threshold: 0.6 },
+    ).observe(wsc);
+  }
+
+  /* ══ 10. PHOTO 3D TILT ════════════════════════════════════════ */
+  const pc = D.getElementById("pcard"),
+    ps = D.getElementById("psh");
+  if (pc && !("ontouchstart" in window)) {
+    pc.parentElement.style.perspective = "1100px";
+    let tX = 0,
+      tY = 0,
+      cX = 0,
+      cY = 0,
+      raf = null,
+      on = false;
+    const lr = (a, b, t) => a + (b - a) * t;
+    function loop() {
+      cX = lr(cX, tX, on ? 0.13 : 0.07);
+      cY = lr(cY, tY, on ? 0.13 : 0.07);
+      const sc = on ? 1.04 : 1;
+      pc.style.transform = `rotateX(${cX}deg) rotateY(${cY}deg) scale3d(${sc},${sc},${sc})`;
+      if (Math.abs(cX - tX) > 0.007 || Math.abs(cY - tY) > 0.007 || on)
+        raf = requestAnimationFrame(loop);
+      else {
+        pc.style.transform = "";
+        raf = null;
+      }
+    }
+    function go() {
+      if (!raf) raf = requestAnimationFrame(loop);
+    }
+    pc.addEventListener("mouseenter", () => {
+      on = true;
+      pc.classList.add("ton");
+      pc.classList.remove("toff");
+      if (ps) ps.style.setProperty("--sop", "1");
+      go();
+    });
+    pc.addEventListener("mousemove", (e) => {
+      const r = pc.getBoundingClientRect();
+      tY = ((e.clientX - r.left - r.width / 2) / (r.width / 2)) * 13;
+      tX = (-(e.clientY - r.top - r.height / 2) / (r.height / 2)) * 13;
+      if (ps) {
+        ps.style.setProperty(
+          "--mx",
+          (((e.clientX - r.left) / r.width) * 100).toFixed(1) + "%",
+        );
+        ps.style.setProperty(
+          "--my",
+          (((e.clientY - r.top) / r.height) * 100).toFixed(1) + "%",
+        );
+      }
+    });
+    pc.addEventListener("mouseleave", () => {
+      on = false;
+      tX = 0;
+      tY = 0;
+      pc.classList.remove("ton");
+      pc.classList.add("toff");
+      if (ps) ps.style.setProperty("--sop", "0");
+      go();
+      setTimeout(() => pc.classList.remove("toff"), 700);
+    });
+  }
+
+  /* ══ 11. MAGNETIC SKILL CARDS ═════════════════════════════════ */
+  if (!("ontouchstart" in window)) {
+    D.querySelectorAll(".sk").forEach((card) => {
+      const strength = 10;
+      card.addEventListener("mousemove", (e) => {
+        const r = card.getBoundingClientRect();
+        const x = ((e.clientX - r.left - r.width / 2) / r.width) * strength;
+        const y = ((e.clientY - r.top - r.height / 2) / r.height) * strength;
+        card.style.transform = `translate(${x}px,${y}px) translateY(${card.style.transform.includes("translateY(-5px)") ? "-5px" : "0px"})`;
+      });
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+      });
+    });
+  }
+
+  /* ══ 12. COPY EMAIL ════════════════════════════════════════════ */
+  function copyEmail() {
+    navigator.clipboard
+      .writeText("rashq122@gmail.com")
+      .then(() => {
+        const btn = D.getElementById("copy-btn");
+        const ico = D.getElementById("copy-icon");
+        const txt = D.getElementById("copy-txt");
+        btn.classList.add("copied");
+        ico.className = "bx bx-check";
+        txt.textContent = "Copied!";
+        setTimeout(() => {
+          btn.classList.remove("copied");
+          ico.className = "bx bx-copy";
+          txt.textContent = "Copy";
+        }, 2500);
+      })
+      .catch(() => {
+        // fallback
+        const el = D.createElement("textarea");
+        el.value = "rashq122@gmail.com";
+        D.body.appendChild(el);
+        el.select();
+        D.execCommand("copy");
+        D.body.removeChild(el);
+        const btn = D.getElementById("copy-btn");
+        const ico = D.getElementById("copy-icon");
+        const txt = D.getElementById("copy-txt");
+        btn.classList.add("copied");
+        ico.className = "bx bx-check";
+        txt.textContent = "Copied!";
+        setTimeout(() => {
+          btn.classList.remove("copied");
+          ico.className = "bx bx-copy";
+          txt.textContent = "Copy";
+        }, 2500);
+      });
+  }
+  window.copyEmail = copyEmail;
+})();
