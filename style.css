@@ -2079,7 +2079,7 @@ footer {
   align-items: center;
   gap: 6px;
 }
-.ft-l .fa {
+.ft-l .ft-a {
   color: var(--a);
 }
 .ft-l .fb {
