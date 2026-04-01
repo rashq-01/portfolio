@@ -398,12 +398,10 @@
   if (D.getElementById("typed-el")) {
     new Typed("#typed-el", {
       strings: [
-        "./run nexus-chat --workers=5",
-        "git commit -m 'feat: 14k rps'",
-        "redis-cli SUBSCRIBE events",
-        "npm start --env=production",
-        "ssh -i key.pem rajesh@backend",
-        "./benchmark --ws --rps=15000",
+        "sudo su",
+        "git pull origin main",
+        "redis-cli",
+        "npm run dev"
       ],
       typeSpeed: 48,
       backSpeed: 24,
