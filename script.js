@@ -399,8 +399,10 @@
     new Typed("#typed-el", {
       strings: [
         "sudo su",
-        "git pull origin main",
-        "redis-cli",
+        "echo 'Hello Word'",
+        "cd /home/rashq",
+        "git rebase -i",
+        "nginx -s reload",
         "npm run dev"
       ],
       typeSpeed: 48,
