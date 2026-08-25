@@ -438,65 +438,110 @@
     ).observe(wsc);
   }
 
-  /* ══ 10. PHOTO 3D TILT ════════════════════════════════════════ */
-  const pc = D.getElementById("pcard"),
-    ps = D.getElementById("psh");
-  if (pc && !("ontouchstart" in window)) {
-    pc.parentElement.style.perspective = "1100px";
-    let tX = 0,
-      tY = 0,
-      cX = 0,
-      cY = 0,
-      raf = null,
-      on = false;
-    const lr = (a, b, t) => a + (b - a) * t;
-    function loop() {
-      cX = lr(cX, tX, on ? 0.13 : 0.07);
-      cY = lr(cY, tY, on ? 0.13 : 0.07);
-      const sc = on ? 1.04 : 1;
-      pc.style.transform = `rotateX(${cX}deg) rotateY(${cY}deg) scale3d(${sc},${sc},${sc})`;
-      if (Math.abs(cX - tX) > 0.007 || Math.abs(cY - tY) > 0.007 || on)
-        raf = requestAnimationFrame(loop);
-      else {
-        pc.style.transform = "";
-        raf = null;
+  /* ══ 10. CUBOID 3D ROTATION ════════════════════════════════════════ */
+  const cube = D.getElementById("cuboid");
+  if (cube) {
+    let rX = -10, rY = -20;
+    let drag = false;
+    let startX, startY;
+    let baseRX = rX, baseRY = rY;
+    let autoRotate = true;
+    let lastTime = performance.now();
+    let speed = 0.02;
+
+    function updateFaces() {
+      const w = cube.offsetWidth;
+      const h = cube.offsetHeight;
+      const d = w; 
+      
+      const front = D.querySelector('.cuboid-front');
+      const back = D.querySelector('.cuboid-back');
+      const right = D.querySelector('.cuboid-right');
+      const left = D.querySelector('.cuboid-left');
+      const top = D.querySelector('.cuboid-top');
+      const bottom = D.querySelector('.cuboid-bottom');
+
+      if(front) front.style.transform = `rotateY(0deg) translateZ(${d/2}px)`;
+      if(back) back.style.transform = `rotateY(180deg) translateZ(${d/2}px)`;
+      
+      if(right) {
+        right.style.width = `${d}px`;
+        right.style.left = `${(w - d) / 2}px`;
+        right.style.transform = `rotateY(90deg) translateZ(${w/2}px)`;
+      }
+      if(left) {
+        left.style.width = `${d}px`;
+        left.style.left = `${(w - d) / 2}px`;
+        left.style.transform = `rotateY(-90deg) translateZ(${w/2}px)`;
+      }
+      if(top) {
+        top.style.height = `${d}px`;
+        top.style.top = `${(h - d) / 2}px`;
+        top.style.transform = `rotateX(90deg) translateZ(${h/2}px)`;
+      }
+      if(bottom) {
+        bottom.style.height = `${d}px`;
+        bottom.style.top = `${(h - d) / 2}px`;
+        bottom.style.transform = `rotateX(-90deg) translateZ(${h/2}px)`;
       }
     }
-    function go() {
-      if (!raf) raf = requestAnimationFrame(loop);
-    }
-    pc.addEventListener("mouseenter", () => {
-      on = true;
-      pc.classList.add("ton");
-      pc.classList.remove("toff");
-      if (ps) ps.style.setProperty("--sop", "1");
-      go();
-    });
-    pc.addEventListener("mousemove", (e) => {
-      const r = pc.getBoundingClientRect();
-      tY = ((e.clientX - r.left - r.width / 2) / (r.width / 2)) * 13;
-      tX = (-(e.clientY - r.top - r.height / 2) / (r.height / 2)) * 13;
-      if (ps) {
-        ps.style.setProperty(
-          "--mx",
-          (((e.clientX - r.left) / r.width) * 100).toFixed(1) + "%",
-        );
-        ps.style.setProperty(
-          "--my",
-          (((e.clientY - r.top) / r.height) * 100).toFixed(1) + "%",
-        );
+    
+    window.addEventListener('resize', updateFaces, { passive: true });
+    updateFaces();
+
+    function render(time) {
+      const dt = time - lastTime;
+      lastTime = time;
+      
+      if (autoRotate && !drag) {
+        rY += speed * dt;
       }
-    });
-    pc.addEventListener("mouseleave", () => {
-      on = false;
-      tX = 0;
-      tY = 0;
-      pc.classList.remove("ton");
-      pc.classList.add("toff");
-      if (ps) ps.style.setProperty("--sop", "0");
-      go();
-      setTimeout(() => pc.classList.remove("toff"), 700);
-    });
+      
+      cube.style.transform = `rotateX(${rX}deg) rotateY(${rY}deg)`;
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    const onDown = (e) => {
+      drag = true;
+      autoRotate = false;
+      startX = e.clientX || (e.touches && e.touches[0].clientX);
+      startY = e.clientY || (e.touches && e.touches[0].clientY);
+      baseRX = rX;
+      baseRY = rY;
+      cube.style.cursor = 'grabbing';
+    };
+    
+    const onMove = (e) => {
+      if (!drag) return;
+      const curX = e.clientX || (e.touches && e.touches[0].clientX);
+      const curY = e.clientY || (e.touches && e.touches[0].clientY);
+      if (curX === undefined || curY === undefined) return;
+      
+      const dx = curX - startX;
+      const dy = curY - startY;
+      
+      rY = baseRY + dx * 0.5;
+      rX = baseRX - dy * 0.5;
+    };
+    
+    const onUp = () => {
+      drag = false;
+      autoRotate = true;
+      cube.style.cursor = 'grab';
+    };
+
+    cube.addEventListener('mousedown', onDown);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    
+    cube.addEventListener('touchstart', onDown, {passive: true});
+    window.addEventListener('touchmove', onMove, {passive: false});
+    window.addEventListener('touchend', onUp);
+    
+    cube.addEventListener('touchmove', (e) => {
+      if (drag) e.preventDefault();
+    }, { passive: false });
   }
 
   /* ══ 11. MAGNETIC SKILL CARDS ═════════════════════════════════ */
@@ -740,21 +785,23 @@
         ctx.strokeStyle = dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.05)';
         ctx.beginPath(); ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y); ctx.stroke();
       } else if (isHov) {
+        const tc = dark ? '#ffffff' : '#000000';
         /* glowing animated edge */
         const g = ctx.createLinearGradient(na.x, na.y, nb.x, nb.y);
-        g.addColorStop(0, CATS[na.cat].c + 'ee');
-        g.addColorStop(1, CATS[nb.cat].c + 'ee');
+        g.addColorStop(0, tc + 'ee');
+        g.addColorStop(1, tc + 'ee');
         ctx.save();
         ctx.lineWidth   = 2.5;
         ctx.strokeStyle = g;
-        ctx.shadowColor = CATS[na.cat].c;
+        ctx.shadowColor = tc;
         ctx.shadowBlur  = 10;
         ctx.beginPath(); ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y); ctx.stroke();
         ctx.restore();
       } else {
+        const tc = dark ? '#ffffff' : '#000000';
         const g2 = ctx.createLinearGradient(na.x, na.y, nb.x, nb.y);
-        g2.addColorStop(0, CATS[na.cat].c + '50');
-        g2.addColorStop(1, CATS[nb.cat].c + '50');
+        g2.addColorStop(0, tc + '50');
+        g2.addColorStop(1, tc + '50');
         ctx.lineWidth   = 1;
         ctx.strokeStyle = g2;
         ctx.beginPath(); ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y); ctx.stroke();
@@ -779,7 +826,7 @@
       const dimmed = hovered && !isHov && !isConn;
       const active = isHov || isDrag || isConn;
       const r      = (isHov || isDrag) ? n.r + 5 : n.r;
-      const col    = cat.c;
+      const col    = dark ? '#ffffff' : '#000000';
 
       /* ── animated glow ring on hover ── */
       if (isHov || isDrag) {
