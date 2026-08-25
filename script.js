@@ -783,21 +783,23 @@
         ctx.strokeStyle = dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.05)';
         ctx.beginPath(); ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y); ctx.stroke();
       } else if (isHov) {
+        const tc = dark ? '#ffffff' : '#000000';
         /* glowing animated edge */
         const g = ctx.createLinearGradient(na.x, na.y, nb.x, nb.y);
-        g.addColorStop(0, CATS[na.cat].c + 'ee');
-        g.addColorStop(1, CATS[nb.cat].c + 'ee');
+        g.addColorStop(0, tc + 'ee');
+        g.addColorStop(1, tc + 'ee');
         ctx.save();
         ctx.lineWidth   = 2.5;
         ctx.strokeStyle = g;
-        ctx.shadowColor = CATS[na.cat].c;
+        ctx.shadowColor = tc;
         ctx.shadowBlur  = 10;
         ctx.beginPath(); ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y); ctx.stroke();
         ctx.restore();
       } else {
+        const tc = dark ? '#ffffff' : '#000000';
         const g2 = ctx.createLinearGradient(na.x, na.y, nb.x, nb.y);
-        g2.addColorStop(0, CATS[na.cat].c + '50');
-        g2.addColorStop(1, CATS[nb.cat].c + '50');
+        g2.addColorStop(0, tc + '50');
+        g2.addColorStop(1, tc + '50');
         ctx.lineWidth   = 1;
         ctx.strokeStyle = g2;
         ctx.beginPath(); ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y); ctx.stroke();
@@ -822,7 +824,7 @@
       const dimmed = hovered && !isHov && !isConn;
       const active = isHov || isDrag || isConn;
       const r      = (isHov || isDrag) ? n.r + 5 : n.r;
-      const col    = cat.c;
+      const col    = dark ? '#ffffff' : '#000000';
 
       /* ── animated glow ring on hover ── */
       if (isHov || isDrag) {
