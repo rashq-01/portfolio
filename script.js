@@ -21,6 +21,7 @@
     if (bi >= bootMsgs.length) {
       setTimeout(() => {
         bootEl.classList.add("done");
+        D.body.classList.add("boot-complete");
       }, 400);
       return;
     }
