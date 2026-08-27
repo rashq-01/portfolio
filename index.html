@@ -130,23 +130,26 @@
         <!-- Photo -->
         <div class="ph-col">
           <div class="ph-sc cuboid-scene">
-            <div class="cuboid" id="cuboid">
-              <div class="holo-slice" style="--i: -7;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -6;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -5;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -4;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -3;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -2;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -1;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 0;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 1;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 2;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 3;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 4;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 5;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 6;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice front" style="--i: 7;"><img src="pic.png" alt="Rajesh Pandit"></div>
-            </div>
+              <!-- Nuclear Blast / God-Tier Reveal -->
+              <div class="nuke-beast" id="nuke-beast">
+                <!-- Secret Cover -->
+                <div class="nuke-secret" id="nuke-secret">
+                  <div class="secret-label">[ Hover to Reveal ]</div>
+                </div>
+                <div class="nuke-flash" id="nuke-flash"></div>
+                <canvas class="nuke-canvas" id="nuke-canvas"></canvas>
+                <!-- Professional HUD Frame -->
+                <div class="nuke-hud" id="nuke-hud">
+                  <div class="hud-corner hud-tl"></div>
+                  <div class="hud-corner hud-tr"></div>
+                  <div class="hud-corner hud-bl"></div>
+                  <div class="hud-corner hud-br"></div>
+                  <div class="hud-scanline"></div>
+                  <div class="hud-label">SYS.ENGINEER <span class="hud-blink">●</span> ONLINE</div>
+                  <div class="hud-label hud-label-b">RAJESH PANDIT</div>
+                </div>
+                <img src="pic.png" alt="Rajesh Pandit" class="nuke-image" id="nuke-image" style="opacity:0;">
+              </div>
             <div class="ph-bdg" style="position: absolute; bottom: -40px; right: 20px; z-index: 10;">
               <div class="ph-dot"></div>
               <span class="ph-txt">Open to opportunities</span>
@@ -595,6 +598,7 @@
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
   <div id="flash-overlay"></div>
   <script src="script.js"></script>
+  <script src="nuke-beast.js"></script>
 </body>
 
 </html>

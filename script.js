@@ -400,7 +400,7 @@
     new Typed("#typed-el", {
       strings: [
         "sudo su",
-        "git pull origin main",
+        "git add .",
         "redis-cli",
         "npm run dev"
       ],
