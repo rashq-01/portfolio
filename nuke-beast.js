@@ -246,23 +246,24 @@
     }
 
     function revealPicture() {
-      // Step 1: Scan line sweep reveal
+      // Step 1: Fade-in setup
       img.style.transition = 'none';
-      img.style.transform = 'scale(1)';
+      img.style.transform = 'scale(0.9)';
       img.style.opacity = '0';
-      img.style.filter = 'brightness(100%) blur(0px)';
-      img.style.clipPath = 'inset(0 100% 0 0)'; // Hidden by clip
+      img.style.filter = 'brightness(200%) blur(10px)';
+      img.style.clipPath = 'none';
 
-      // Step 2: Start the sweep
+      // Step 2: Push forward into full brightness
       setTimeout(() => {
-        img.style.transition = 'clip-path 1s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s';
-        img.style.clipPath = 'inset(0 0% 0 0)'; // Sweep right to left
+        img.style.transition = 'transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s, filter 1s';
+        img.style.transform = 'scale(1)';
         img.style.opacity = '1';
+        img.style.filter = 'brightness(100%) blur(0px)';
       }, 100);
 
       // Step 3: Activate the professional HUD frame
       setTimeout(() => {
-        hud.classList.add('active');
+        if (hud) hud.classList.add('active');
       }, 600);
     }
 
@@ -270,15 +271,15 @@
       phase = 'idle';
       wrap.style.animation = 'none';
       flash.style.opacity = '0';
-      hud.classList.remove('active');
+      if (hud) hud.classList.remove('active');
       if (secret) secret.classList.remove('gone');
 
       // Smooth image return
-      img.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s, filter 0.4s, clip-path 0.4s';
+      img.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s, filter 0.4s';
       img.style.transform = 'scale(1)';
       img.style.opacity = '1';
       img.style.filter = 'none';
-      img.style.clipPath = 'inset(0 0% 0 0)';
+      img.style.clipPath = 'none';
 
       // Let particles die
       particles.forEach(p => { p.life = -1; });
@@ -310,28 +311,12 @@
     }
 
     // ── Events ──
-    let hoverTimeout;
-    
-    if (isMobile) {
-      // Mobile: Tap to toggle
-      wrap.addEventListener('click', () => {
-        if (phase === 'idle') {
-          detonate();
-        } else {
-          hideAll();
-        }
-      });
-    } else {
-      // Desktop: Hover to reveal
-      wrap.addEventListener('mouseenter', () => {
-        clearTimeout(hoverTimeout);
-        if (phase === 'idle') detonate();
-      });
-      wrap.addEventListener('mouseleave', () => {
-        clearTimeout(hoverTimeout);
-        hideAll();
-      });
-    }
+    // All devices (mobile and desktop): Tap/Click to reveal (once)
+    wrap.addEventListener('click', () => {
+      if (phase === 'idle') {
+        detonate();
+      }
+    });
   };
 
   if (document.readyState === 'loading') {

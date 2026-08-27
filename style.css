@@ -1341,7 +1341,7 @@ body.boot-complete #flash-overlay {
 }
 .nuke-image {
   width: 100%; height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 20px;
   position: relative;
   z-index: 20;
@@ -2646,3 +2646,305 @@ footer {
 [data-theme="light"] #sk-graph-cv {
   background: rgba(255,255,255,0.8);
 }
+
+/* ═══ TELEMETRY SECTION ═══ */
+#telemetry {
+  padding-top: 100px;
+}
+.tel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 56px;
+  position: relative;
+  z-index: 2;
+}
+.tel-card {
+  background: var(--bg1);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid var(--bdr);
+  border-radius: 14px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.tel-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(192, 192, 192, 0.4);
+  box-shadow: 0 12px 40px rgba(192, 192, 192, 0.12);
+}
+.tel-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.tel-icon {
+  font-size: 24px;
+  text-shadow: 0 0 16px currentColor;
+}
+.tel-title {
+  font-family: var(--m);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tx);
+}
+.tel-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.tel-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tel-label {
+  font-family: var(--m);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--tx3);
+  text-transform: uppercase;
+}
+.tel-val {
+  font-family: var(--m);
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--tx);
+  letter-spacing: -0.02em;
+}
+.tel-bg-icon {
+  position: absolute;
+  right: -20px;
+  bottom: -30px;
+  font-size: 140px;
+  color: var(--tx3);
+  opacity: 0.05;
+  pointer-events: none;
+  transform: rotate(-15deg);
+  transition: transform 0.5s var(--ease), opacity 0.5s var(--ease);
+}
+.tel-card:hover .tel-bg-icon {
+  transform: rotate(0deg) scale(1.1);
+  opacity: 0.1;
+}
+
+/* ═══ HEATMAP ═══ */
+.heatmap-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, 1fr);
+  gap: 4px;
+  min-width: max-content;
+}
+.hm-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--bdr);
+  transition: all 0.3s;
+}
+.hm-cell[data-level="1"] { background: rgba(0, 255, 65, 0.2); }
+.hm-cell[data-level="2"] { background: rgba(0, 255, 65, 0.5); }
+.hm-cell[data-level="3"] { background: rgba(0, 255, 65, 0.8); }
+.hm-cell[data-level="4"] { background: rgba(0, 255, 65, 1); box-shadow: 0 0 8px rgba(0, 255, 65, 0.6); }
+
+[data-theme="light"] .hm-cell { background: rgba(0,0,0,0.05); }
+[data-theme="light"] .hm-cell[data-level="1"] { background: rgba(0, 180, 45, 0.2); }
+[data-theme="light"] .hm-cell[data-level="2"] { background: rgba(0, 180, 45, 0.5); }
+[data-theme="light"] .hm-cell[data-level="3"] { background: rgba(0, 180, 45, 0.8); }
+[data-theme="light"] .hm-cell[data-level="4"] { background: rgba(0, 180, 45, 1); box-shadow: 0 0 8px rgba(0, 180, 45, 0.6); }
+
+.hm-cell:hover {
+  transform: scale(1.3);
+  z-index: 10;
+}
+
+/* ═══ FLEX CARDS (ADVANCED TELEMETRY) ═══ */
+.flex-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+}
+.fc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--bdr);
+  padding-bottom: 12px;
+}
+.fc-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--h);
+  font-size: 1.1rem;
+  color: var(--tx);
+  font-weight: 600;
+}
+.fc-title i { font-size: 1.4rem; color: var(--ac); }
+.fc-badge {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  background: rgba(255, 161, 22, 0.2);
+  color: #FFA116;
+  border-radius: 20px;
+  font-family: var(--m);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.fc-badge.cf { background: rgba(54, 123, 240, 0.2); color: #367bf0; }
+.fc-badge.gh { background: rgba(255, 255, 255, 0.1); color: var(--tx); }
+.fc-stats {
+  display: flex;
+  justify-content: space-between;
+}
+.fc-stats.split {
+  border-bottom: 1px dashed rgba(255,255,255,0.1);
+  padding-bottom: 12px;
+  margin-bottom: -4px;
+}
+.fc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fc-label {
+  font-size: 0.8rem;
+  color: var(--tx2);
+  font-family: var(--m);
+}
+.fc-val {
+  font-size: 1.4rem;
+  color: var(--tx);
+  font-weight: 700;
+  font-family: var(--h);
+}
+
+.fc-progress-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+.fc-progress {
+  display: flex;
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+}
+.fc-bar { height: 100%; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.fc-bar.easy { background: #00b8a3; }
+.fc-bar.med { background: #ffc01e; }
+.fc-bar.hard { background: #ff375f; }
+
+.fc-tags {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-family: var(--m);
+}
+.fc-tag.easy { color: #00b8a3; }
+.fc-tag.med { color: #ffc01e; }
+.fc-tag.hard { color: #ff375f; }
+.fc-tag strong { color: var(--tx); margin-left: 4px; }
+
+/* ═══ LEETCODE CIRCLE (DONUT) ═══ */
+.lc-circle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 12px;
+}
+.lc-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: conic-gradient(#333 0% 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 1s ease-out;
+}
+.lc-circle-inner {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.lc-circle-val {
+  font-size: 1.3rem;
+  font-family: var(--h);
+  font-weight: 700;
+  color: var(--tx);
+  line-height: 1;
+}
+.lc-circle-lbl {
+  font-size: 0.7rem;
+  color: var(--tx3);
+  margin-top: 2px;
+  font-family: var(--m);
+}
+.lc-circle-stats {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+}
+.lc-stat-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.85rem;
+  font-family: var(--m);
+  align-items: center;
+}
+.lc-stat-nums {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.lc-total {
+  font-size: 0.75rem;
+  color: var(--tx3);
+}
+.lc-stat-row.easy { color: #00b8a3; }
+.lc-stat-row.med { color: #ffc01e; }
+.lc-stat-row.hard { color: #ff375f; }
+.lc-stat-row strong { color: var(--tx); font-weight: 600; }
+
+/* ═══ CUSTOM LEETCODE COLORS ═══ */
+:root {
+  --lc-ez: #008f39; /* Darker Green */
+  --lc-md: #cc6600; /* Darker Orange */
+  --lc-hd: #990000; /* Darker Red */
+}
+[data-theme="light"] {
+  --lc-ez: #00e600; /* Bright Green */
+  --lc-md: #ff8c00; /* Bright Orange */
+  --lc-hd: #ff0000; /* Bright Red */
+}
+
+.fc-tag.easy, .lc-stat-row.easy { color: var(--lc-ez) !important; }
+.fc-tag.med, .lc-stat-row.med { color: var(--lc-md) !important; }
+.fc-tag.hard, .lc-stat-row.hard { color: var(--lc-hd) !important; }
+.fc-bar.easy { background-color: var(--lc-ez); }
+.fc-bar.med { background-color: var(--lc-md); }
+.fc-bar.hard { background-color: var(--lc-hd); }
+.lc-stat-row.easy span, .lc-stat-row.med span, .lc-stat-row.hard span { color: inherit; }

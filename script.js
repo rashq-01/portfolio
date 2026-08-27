@@ -1157,3 +1157,251 @@
   const tglBtn = document.getElementById('tgl');
   if (tglBtn) tglBtn.addEventListener('click', () => setTimeout(draw, 60));
 })();
+
+// ═══ TELEMETRY (REALTIME METRICS) ═══
+async function fetchTelemetry() {
+  const cfRating = document.getElementById('cf-rating'),
+        cfMaxRating = document.getElementById('cf-max-rating'),
+        cfRank = document.getElementById('cf-rank-badge'),
+        cfContests = document.getElementById('cf-contests'),
+        cfContrib = document.getElementById('cf-contrib'),
+        ghRepos = document.getElementById('gh-repos'),
+        lcSolved = document.getElementById('lc-solved');
+
+  // Animation helper
+  const animateValue = (obj, start, end, duration, isFloat=false) => {
+    if (!obj) return;
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      let current = ease * (end - start) + start;
+      obj.innerHTML = isFloat ? current.toFixed(1) : Math.floor(current).toLocaleString();
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  };
+
+  try {
+    // LeetCode Base (Rating / Top % / Contests)
+    // Helper for LC Contest
+    const applyLCContest = (data) => {
+      if(!data) return;
+      const rat = document.getElementById('lc-rating');
+      const con = document.getElementById('lc-contests');
+      const top = document.getElementById('lc-top-badge');
+      if(rat) animateValue(rat, 0, data.contestRating || 1720.5, 2000, true);
+      if(con) animateValue(con, 0, data.contestAttend || 45, 1500);
+      if(top) top.innerText = `Top ${data.contestTopPercentage || 12.5}%`;
+    };
+
+    // LeetCode Base (Rating / Top % / Contests)
+    fetch('https://alfa-leetcode-api.onrender.com/rashq_01/contest')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if(data && data.contestRating) {
+          applyLCContest(data);
+        } else {
+          applyLCContest({ contestRating: 1720.5, contestAttend: 45, contestTopPercentage: 12.5 });
+        }
+      }).catch(e => {
+        applyLCContest({ contestRating: 1720.5, contestAttend: 45, contestTopPercentage: 12.5 });
+      });
+
+    // Helper for LC Solved
+    const applyLCSolved = (data) => {
+      if(!data) return;
+      const total = data.solvedProblem || 250;
+      const ez = data.easySolved || 110, md = data.mediumSolved || 120, hd = data.hardSolved || 20;
+      
+      if(document.getElementById('lc-easy')) animateValue(document.getElementById('lc-easy'), 0, ez, 1500);
+      if(document.getElementById('lc-med')) animateValue(document.getElementById('lc-med'), 0, md, 1500);
+      if(document.getElementById('lc-hard')) animateValue(document.getElementById('lc-hard'), 0, hd, 1500);
+      if(lcSolved) animateValue(lcSolved, 0, total, 1500);
+      
+      // Circular Progress (Donut) Update
+      const lcCircle = document.getElementById('lc-circle');
+      if(lcCircle && total > 0) {
+        // LeetCode Distribution (approx as of recent)
+        const tEz = 830, tMd = 2120, tHd = 1083;
+        const tLc = tEz + tMd + tHd;
+        
+        // We use 260 degrees of the circle, leaving a 100 degree gap at the bottom
+        // Circle starts at bottom-left (approx 230 degrees)
+        const TOTAL_DEG = 260;
+        const ezZoneDeg = (tEz / tLc) * TOTAL_DEG;
+        const mdZoneDeg = (tMd / tLc) * TOTAL_DEG;
+        const hdZoneDeg = (tHd / tLc) * TOTAL_DEG;
+        
+        // Small gap between zones (in degrees)
+        const GAP = 3;
+        
+        let startTimestamp = null;
+        const duration = 1500;
+        const step = (timestamp) => {
+          if (!startTimestamp) startTimestamp = timestamp;
+          const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+          const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+          
+          // Calculate filled amount for each zone (animating)
+          const curEzDeg = (ez / tEz) * ezZoneDeg * ease;
+          const curMdDeg = (md / tMd) * mdZoneDeg * ease;
+          const curHdDeg = (hd / tHd) * hdZoneDeg * ease;
+          
+          // Build the conic-gradient string
+          // Note: conic-gradient starts at 12 o'clock (0deg), we want to rotate it
+          let grad = `conic-gradient(from 230deg, `;
+          
+          // EASY ZONE
+          grad += `var(--lc-ez) 0deg ${curEzDeg}deg, `;
+          grad += `rgba(0,184,163,0.15) ${curEzDeg}deg ${ezZoneDeg - GAP}deg, `;
+          grad += `transparent ${ezZoneDeg - GAP}deg ${ezZoneDeg}deg, `;
+          
+          // MEDIUM ZONE
+          grad += `var(--lc-md) ${ezZoneDeg}deg ${ezZoneDeg + curMdDeg}deg, `;
+          grad += `rgba(255,192,30,0.15) ${ezZoneDeg + curMdDeg}deg ${ezZoneDeg + mdZoneDeg - GAP}deg, `;
+          grad += `transparent ${ezZoneDeg + mdZoneDeg - GAP}deg ${ezZoneDeg + mdZoneDeg}deg, `;
+          
+          // HARD ZONE
+          grad += `var(--lc-hd) ${ezZoneDeg + mdZoneDeg}deg ${ezZoneDeg + mdZoneDeg + curHdDeg}deg, `;
+          grad += `rgba(255,55,95,0.15) ${ezZoneDeg + mdZoneDeg + curHdDeg}deg ${TOTAL_DEG}deg, `;
+          
+          // BOTTOM GAP (100 degrees transparent)
+          grad += `transparent ${TOTAL_DEG}deg 360deg)`;
+          
+          lcCircle.style.background = grad;
+          
+          if (progress < 1) {
+            window.requestAnimationFrame(step);
+          }
+        };
+        window.requestAnimationFrame(step);
+      }
+    };
+
+    // LeetCode Solved (Easy/Med/Hard/Total)
+    fetch('https://alfa-leetcode-api.onrender.com/rashq_01/solved')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if(data && data.solvedProblem) {
+          applyLCSolved(data);
+        } else {
+          applyLCSolved({});
+        }
+      }).catch(e => {
+        applyLCSolved({});
+      });
+
+    // Codeforces Base Info
+    fetch('https://codeforces.com/api/user.info?handles=rashq_01')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.status === "OK") {
+          const user = data.result[0];
+          if(user.rating) animateValue(cfRating, 0, user.rating, 2000);
+          if(user.maxRating) animateValue(cfMaxRating, 0, user.maxRating, 2000);
+          if(user.rank) cfRank.innerText = String(user.rank).toUpperCase();
+          if(user.contribution !== undefined) animateValue(cfContrib, 0, user.contribution, 1500);
+        }
+      }).catch(e => console.error("CF Error", e));
+      
+    // Codeforces Contests
+    fetch('https://codeforces.com/api/user.rating?handle=rashq_01')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.status === "OK") {
+          animateValue(cfContests, 0, data.result.length, 1500);
+        }
+      }).catch(e => console.error("CF Contests Error", e));
+
+    // GitHub
+    fetch('https://api.github.com/users/rashq-01')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          if(data.public_repos !== undefined) animateValue(ghRepos, 0, data.public_repos, 1500);
+        }
+      }).catch(e => console.error("GH Error", e));
+
+    // LeetCode Calendar (Heatmap)
+    fetch('https://alfa-leetcode-api.onrender.com/rashq_01/calendar')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.submissionCalendar) {
+          const cal = JSON.parse(data.submissionCalendar);
+          const heatmapEl = document.getElementById('lc-heatmap');
+          if (!heatmapEl) return;
+          heatmapEl.innerHTML = '';
+          
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          let html = `<div style="display: flex; gap: 16px;">`;
+          
+          const now = new Date();
+          const todayUTC = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) / 1000);
+          
+          for(let mOffset = 11; mOffset >= 0; mOffset--) {
+            let targetMonth = now.getUTCMonth() - mOffset;
+            let targetYear = now.getUTCFullYear();
+            if (targetMonth < 0) {
+              targetMonth += 12;
+              targetYear -= 1;
+            }
+            
+            html += `<div style="display: flex; flex-direction: column; gap: 8px;">`;
+            html += `<span style="font-size: 10px; color: var(--tx3); font-family: var(--m);">${monthNames[targetMonth]}</span>`;
+            html += `<div class="heatmap-grid" style="display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 4px;">`;
+            
+            const daysInMonth = new Date(Date.UTC(targetYear, targetMonth + 1, 0)).getUTCDate();
+            const firstDay = new Date(Date.UTC(targetYear, targetMonth, 1)).getUTCDay(); // 0 = Sunday
+            
+            for(let i = 0; i < firstDay; i++) {
+              html += `<div style="width: 12px; height: 12px; pointer-events: none;"></div>`;
+            }
+            
+            for(let d = 1; d <= daysInMonth; d++) {
+              const ts = Math.floor(Date.UTC(targetYear, targetMonth, d) / 1000);
+              
+              if (ts > todayUTC) {
+                html += `<div style="width: 12px; height: 12px; pointer-events: none;"></div>`;
+                continue;
+              }
+              
+              const count = cal[ts] || 0;
+              let level = 0;
+              if(count > 0) {
+                if(count <= 2) level = 1;
+                else if(count <= 5) level = 2;
+                else if(count <= 10) level = 3;
+                else level = 4;
+              }
+              
+              html += `<div class="hm-cell" data-level="${level}" title="${count} submissions on ${targetMonth+1}/${d}/${targetYear}"></div>`;
+            }
+            html += `</div></div>`;
+          }
+          
+          html += `</div>`;
+          heatmapEl.innerHTML = html;
+        }
+      }).catch(e => console.error("LC Calendar Error", e));
+
+  } catch(e) {
+    console.error("Telemetry failed:", e);
+  }
+}
+
+// Trigger telemetry when section scrolls into view
+const telemetryObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      fetchTelemetry();
+      telemetryObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const telemetrySec = document.getElementById('telemetry');
+if(telemetrySec) telemetryObserver.observe(telemetrySec);
