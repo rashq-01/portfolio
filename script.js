@@ -451,40 +451,8 @@
     let lastDragX, lastDragY, lastDragTime;
 
     function updateFaces() {
-      const w = cube.offsetWidth;
-      const h = cube.offsetHeight;
-      const d = w; 
-      
-      const front = D.querySelector('.cuboid-front');
-      const back = D.querySelector('.cuboid-back');
-      const right = D.querySelector('.cuboid-right');
-      const left = D.querySelector('.cuboid-left');
-      const top = D.querySelector('.cuboid-top');
-      const bottom = D.querySelector('.cuboid-bottom');
-
-      if(front) front.style.transform = `rotateY(0deg) translateZ(${d/2}px)`;
-      if(back) back.style.transform = `rotateY(180deg) translateZ(${d/2}px)`;
-      
-      if(right) {
-        right.style.width = `${d}px`;
-        right.style.left = `${(w - d) / 2}px`;
-        right.style.transform = `rotateY(90deg) translateZ(${w/2}px)`;
-      }
-      if(left) {
-        left.style.width = `${d}px`;
-        left.style.left = `${(w - d) / 2}px`;
-        left.style.transform = `rotateY(-90deg) translateZ(${w/2}px)`;
-      }
-      if(top) {
-        top.style.height = `${d}px`;
-        top.style.top = `${(h - d) / 2}px`;
-        top.style.transform = `rotateX(90deg) translateZ(${h/2}px)`;
-      }
-      if(bottom) {
-        bottom.style.height = `${d}px`;
-        bottom.style.top = `${(h - d) / 2}px`;
-        bottom.style.transform = `rotateX(-90deg) translateZ(${h/2}px)`;
-      }
+      cube.style.setProperty('--w', `${cube.offsetWidth}px`);
+      cube.style.setProperty('--h', `${cube.offsetHeight}px`);
     }
     
     window.addEventListener('resize', updateFaces, { passive: true });
