@@ -533,13 +533,8 @@
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
     
-    cube.addEventListener('touchstart', onDown, {passive: true});
-    window.addEventListener('touchmove', onMove, {passive: false});
-    window.addEventListener('touchend', onUp);
-    
-    cube.addEventListener('touchmove', (e) => {
-      if (drag) e.preventDefault();
-    }, { passive: false });
+    // Removed touch listeners to prevent scroll-trapping on mobile devices.
+    // Auto-rotate will keep it dynamic!
   }
 
   /* ══ 11. MAGNETIC SKILL CARDS ═════════════════════════════════ */
@@ -1221,8 +1216,8 @@ async function fetchTelemetry() {
     // Helper for LC Solved
     const applyLCSolved = (data) => {
       if(!data) return;
-      const total = data.solvedProblem || 250;
-      const ez = data.easySolved || 110, md = data.mediumSolved || 120, hd = data.hardSolved || 20;
+      const total = data.solvedProblem || 593;
+      const ez = data.easySolved || 213, md = data.mediumSolved || 308, hd = data.hardSolved || 72;
       
       if(document.getElementById('lc-easy')) animateValue(document.getElementById('lc-easy'), 0, ez, 1500);
       if(document.getElementById('lc-med')) animateValue(document.getElementById('lc-med'), 0, md, 1500);
@@ -1335,7 +1330,7 @@ async function fetchTelemetry() {
 
     // LeetCode Calendar (Heatmap)
     fetch('https://alfa-leetcode-api.onrender.com/rashq_01/calendar')
-      .then(res => res.json())
+      .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (data && data.submissionCalendar) {
           const cal = JSON.parse(data.submissionCalendar);

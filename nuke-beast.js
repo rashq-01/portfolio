@@ -9,7 +9,8 @@
     const hud = document.getElementById('nuke-hud');
     const secret = document.getElementById('nuke-secret');
     const ctx = canvas.getContext('2d', { alpha: true });
-    const W = 1400, H = 1400;
+    // Reduce canvas dimensions to prevent mobile memory/GPU crashes
+    const W = 800, H = 800;
     canvas.width = W; canvas.height = H;
 
     let particles = [], animId = null, phase = 'idle';
@@ -207,8 +208,11 @@
 
       // Stage 3: Fireball (500ms)
       setTimeout(() => {
-        for (let i = 0; i < 250; i++) particles.push(new Fireball());
-        for (let i = 0; i < 600; i++) particles.push(new Spark());
+        const isMob = window.innerWidth < 768;
+        const fbCount = isMob ? 40 : 120;
+        const spCount = isMob ? 100 : 300;
+        for (let i = 0; i < fbCount; i++) particles.push(new Fireball());
+        for (let i = 0; i < spCount; i++) particles.push(new Spark());
         particles.push(new Shockwave());
         if (!animId) loop();
         // Fade flash to reveal fireball
@@ -223,12 +227,16 @@
 
       // Stage 5: Mushroom cloud
       setTimeout(() => {
-        for (let i = 0; i < 200; i++) particles.push(new MushroomChunk());
+        const isMob = window.innerWidth < 768;
+        const mcCount = isMob ? 30 : 100;
+        for (let i = 0; i < mcCount; i++) particles.push(new MushroomChunk());
       }, 800);
 
       // Stage 6: Lingering embers
       setTimeout(() => {
-        for (let i = 0; i < 300; i++) particles.push(new Ember());
+        const isMob = window.innerWidth < 768;
+        const emCount = isMob ? 50 : 150;
+        for (let i = 0; i < emCount; i++) particles.push(new Ember());
       }, 1200);
 
       // Stage 7: Stop camera shake
