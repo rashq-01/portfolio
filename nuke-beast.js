@@ -246,9 +246,9 @@
     }
 
     function revealPicture() {
-      // Step 1: Fade-in setup
+      // Step 1: Volumetric 3D fade-in setup
       img.style.transition = 'none';
-      img.style.transform = 'scale(0.9)';
+      img.style.transform = 'perspective(1000px) translateZ(-50px) scale(0.9)';
       img.style.opacity = '0';
       img.style.filter = 'brightness(200%) blur(10px)';
       img.style.clipPath = 'none';
@@ -256,7 +256,7 @@
       // Step 2: Push forward into full brightness
       setTimeout(() => {
         img.style.transition = 'transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s, filter 1s';
-        img.style.transform = 'scale(1)';
+        img.style.transform = 'perspective(1000px) translateZ(0px) scale(1)';
         img.style.opacity = '1';
         img.style.filter = 'brightness(100%) blur(0px)';
       }, 100);
@@ -276,7 +276,7 @@
 
       // Smooth image return
       img.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s, filter 0.4s';
-      img.style.transform = 'scale(1)';
+      img.style.transform = 'perspective(1000px) translateZ(0px) scale(1)';
       img.style.opacity = '1';
       img.style.filter = 'none';
       img.style.clipPath = 'none';
