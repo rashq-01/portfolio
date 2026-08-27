@@ -1190,10 +1190,17 @@ async function fetchTelemetry() {
     // Helper for LC Contest
     const applyLCContest = (data) => {
       if(!data) return;
+      let peakRating = data.contestRating || 1742;
+      if (data.contestParticipation && Array.isArray(data.contestParticipation)) {
+        const ratings = data.contestParticipation.map(c => c.rating).filter(r => typeof r === 'number');
+        if (ratings.length > 0) {
+          peakRating = Math.max(...ratings);
+        }
+      }
       const rat = document.getElementById('lc-rating');
       const con = document.getElementById('lc-contests');
       const top = document.getElementById('lc-top-badge');
-      if(rat) animateValue(rat, 0, data.contestRating || 1720.5, 2000, true);
+      if(rat) animateValue(rat, 0, peakRating, 2000, true);
       if(con) animateValue(con, 0, data.contestAttend || 45, 1500);
       if(top) top.innerText = `Top ${data.contestTopPercentage || 12.5}%`;
     };
@@ -1202,13 +1209,13 @@ async function fetchTelemetry() {
     fetch('https://alfa-leetcode-api.onrender.com/rashq_01/contest')
       .then(res => res.ok ? res.json() : null)
       .then(data => {
-        if(data && data.contestRating) {
+        if(data && (data.contestRating || data.contestParticipation)) {
           applyLCContest(data);
         } else {
-          applyLCContest({ contestRating: 1720.5, contestAttend: 45, contestTopPercentage: 12.5 });
+          applyLCContest({ contestRating: 1742, contestAttend: 26, contestTopPercentage: 11.15 });
         }
       }).catch(e => {
-        applyLCContest({ contestRating: 1720.5, contestAttend: 45, contestTopPercentage: 12.5 });
+        applyLCContest({ contestRating: 1742, contestAttend: 26, contestTopPercentage: 11.15 });
       });
 
     // Helper for LC Solved

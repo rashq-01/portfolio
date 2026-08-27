@@ -26,9 +26,9 @@
 /* === DARK — Spatial Monochrome === */
 [data-theme="dark"] {
   --bg:  #000000;
-  --bg1: rgba(28, 28, 30, 0.85);
-  --bg2: rgba(44, 44, 46, 0.85);
-  --bg3: rgba(58, 58, 60, 0.85);
+  --bg1: rgba(8, 8, 8, 0.85);
+  --bg2: rgba(14, 14, 14, 0.85);
+  --bg3: rgba(20, 20, 20, 0.85);
   --bgc: #000000;
   --bdr:  rgba(255, 255, 255, 0.15);
   --bdr2: rgba(255, 255, 255, 0.3);
@@ -1331,10 +1331,10 @@ body.boot-complete #flash-overlay {
   font-family: 'JetBrains Mono', 'Courier New', monospace;
   font-size: 12px;
   letter-spacing: 4px;
-  color: var(--tx, #367bf0);
+  color: #ffffff;
   text-transform: uppercase;
   animation: secret-blink 1.5s step-start infinite;
-  text-shadow: 0 0 15px var(--tx, #367bf0);
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 @keyframes secret-blink {
   50% { opacity: 0.3; }
