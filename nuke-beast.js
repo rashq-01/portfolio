@@ -15,11 +15,10 @@
     let particles = [], animId = null, phase = 'idle';
     const CX = W / 2, CY = H / 2;
     
-    // Mobile detection for the secret label
-    const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    // Set the secret label
     if (secret) {
       const label = secret.querySelector('.secret-label');
-      if (label) label.textContent = isMobile ? '[ Tap to Reveal ]' : '[ Hover to Reveal ]';
+      if (label) label.textContent = '[ Tap to Reveal ]';
     }
 
     // ── Particle classes ──
@@ -250,15 +249,14 @@
       img.style.transition = 'none';
       img.style.transform = 'perspective(1000px) translateZ(-50px) scale(0.9)';
       img.style.opacity = '0';
-      img.style.filter = 'brightness(200%) blur(10px)';
       img.style.clipPath = 'none';
+      img.style.filter = 'none';
 
       // Step 2: Push forward into full brightness
       setTimeout(() => {
-        img.style.transition = 'transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s, filter 1s';
+        img.style.transition = 'transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s';
         img.style.transform = 'perspective(1000px) translateZ(0px) scale(1)';
         img.style.opacity = '1';
-        img.style.filter = 'brightness(100%) blur(0px)';
       }, 100);
 
       // Step 3: Activate the professional HUD frame
