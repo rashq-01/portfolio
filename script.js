@@ -446,6 +446,9 @@
     let autoRotate = true;
     let lastTime = performance.now();
     let speed = 0.02;
+    
+    let vX = 0, vY = 0;
+    let lastDragX, lastDragY, lastDragTime;
 
     function updateFaces() {
       const w = cube.offsetWidth;
@@ -491,8 +494,15 @@
       const dt = time - lastTime;
       lastTime = time;
       
-      if (autoRotate && !drag) {
-        rY += speed * dt;
+      if (!drag) {
+        if (Math.abs(vX) > 0.001 || Math.abs(vY) > 0.001) {
+          rY += vX * dt;
+          rX += vY * dt;
+          vX *= 0.95;
+          vY *= 0.95;
+        } else if (autoRotate) {
+          rY += speed * dt;
+        }
       }
       
       cube.style.transform = `rotateX(${rX}deg) rotateY(${rY}deg)`;
@@ -507,6 +517,11 @@
       startY = e.clientY || (e.touches && e.touches[0].clientY);
       baseRX = rX;
       baseRY = rY;
+      lastDragX = startX;
+      lastDragY = startY;
+      lastDragTime = performance.now();
+      vX = 0;
+      vY = 0;
       cube.style.cursor = 'grabbing';
     };
     
@@ -521,12 +536,28 @@
       
       rY = baseRY + dx * 0.5;
       rX = baseRX - dy * 0.5;
+      
+      const now = performance.now();
+      const dt = now - lastDragTime;
+      if (dt > 0) {
+        vX = (curX - lastDragX) * 0.5 / dt;
+        vY = -(curY - lastDragY) * 0.5 / dt;
+      }
+      
+      lastDragX = curX;
+      lastDragY = curY;
+      lastDragTime = now;
     };
     
     const onUp = () => {
       drag = false;
       autoRotate = true;
       cube.style.cursor = 'grab';
+      
+      if (performance.now() - lastDragTime > 100) {
+        vX = 0;
+        vY = 0;
+      }
     };
 
     cube.addEventListener('mousedown', onDown);
@@ -1062,39 +1093,84 @@
     vpZ = newZ;
   }, { passive: false });
 
-  /* touch: 1-finger pan, 2-finger pinch-zoom */
+  /* touch: 1-finger drag node or page scroll, 2-finger pinch-zoom */
   let touch1 = null, touch2 = null, initPinchDist = 0, initVpZ = 1;
   cv.addEventListener('touchstart', e => {
-    e.preventDefault();
     if (e.touches.length === 1) {
-      touch1   = e.touches[0];
-      lastPanX = touch1.clientX; lastPanY = touch1.clientY;
-      panning  = true;
+      touch1 = e.touches[0];
+      const rect = cv.getBoundingClientRect();
+      const sx   = touch1.clientX - rect.left;
+      const sy   = touch1.clientY - rect.top;
+      const hit  = getNode(sx, sy);
+      if (hit) {
+        /* touching a node — start node drag */
+        e.preventDefault();
+        dragging = hit;
+        const w  = toWorld(sx, sy);
+        dragOffX = hit.x - w.x;
+        dragOffY = hit.y - w.y;
+        hit.vx = 0; hit.vy = 0;
+        hovered = hit;
+        showTip(hit, touch1.clientX, touch1.clientY);
+      } else {
+        /* touching empty space — let the browser scroll */
+        dragging = null;
+        hovered = null;
+        hideTip();
+      }
     } else if (e.touches.length === 2) {
+      e.preventDefault();
+      dragging = null;
       touch1 = e.touches[0]; touch2 = e.touches[1];
       initPinchDist = Math.hypot(touch1.clientX - touch2.clientX, touch1.clientY - touch2.clientY);
       initVpZ = vpZ;
-      panning = false;
     }
   }, { passive: false });
+
   cv.addEventListener('touchmove', e => {
-    e.preventDefault();
-    if (e.touches.length === 1 && panning) {
-      vpX += e.touches[0].clientX - lastPanX;
-      vpY += e.touches[0].clientY - lastPanY;
-      lastPanX = e.touches[0].clientX; lastPanY = e.touches[0].clientY;
+    if (e.touches.length === 1) {
+      if (dragging) {
+        e.preventDefault(); /* prevent scroll while dragging a node */
+        const t    = e.touches[0];
+        const rect = cv.getBoundingClientRect();
+        const sx   = t.clientX - rect.left;
+        const sy   = t.clientY - rect.top;
+        const w    = toWorld(sx, sy);
+        dragging.x = w.x + dragOffX;
+        dragging.y = w.y + dragOffY;
+        dragging.vx = 0; dragging.vy = 0;
+        showTip(dragging, t.clientX, t.clientY);
+      }
+      /* If not dragging, we do nothing and let the browser scroll the page */
     } else if (e.touches.length === 2) {
+      e.preventDefault();
       const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
       vpZ = Math.max(0.35, Math.min(3, initVpZ * d / initPinchDist));
     }
   }, { passive: false });
-  cv.addEventListener('touchend', () => { panning = false; touch1 = null; touch2 = null; });
 
-  /* double-tap to reset view */
+  cv.addEventListener('touchend', e => {
+    if (dragging) { pinned.add(dragging.id); dragging = null; }
+    hovered = null; hideTip();
+    touch1 = null; touch2 = null;
+  });
+
+  /* double-tap to reset view or unpin */
   let lastTap = 0;
   cv.addEventListener('touchend', e => {
     const now = Date.now();
-    if (now - lastTap < 300) { vpX = 0; vpY = 0; vpZ = 1; }
+    if (now - lastTap < 300) {
+      if (e.changedTouches.length > 0) {
+        const t = e.changedTouches[0];
+        const rect = cv.getBoundingClientRect();
+        const hit = getNode(t.clientX - rect.left, t.clientY - rect.top);
+        if (hit) {
+          pinned.delete(hit.id); hit.vx = 0; hit.vy = 0;
+        } else {
+          vpX = 0; vpY = 0; vpZ = 1;
+        }
+      }
+    }
     lastTap = now;
   });
 
