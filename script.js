@@ -533,8 +533,13 @@
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
     
-    // Removed touch listeners to prevent scroll-trapping on mobile devices.
-    // Auto-rotate will keep it dynamic!
+    cube.addEventListener('touchstart', onDown, {passive: true});
+    window.addEventListener('touchmove', onMove, {passive: false});
+    window.addEventListener('touchend', onUp);
+    
+    cube.addEventListener('touchmove', (e) => {
+      if (drag) e.preventDefault();
+    }, { passive: false });
   }
 
   /* ══ 11. MAGNETIC SKILL CARDS ═════════════════════════════════ */
