@@ -36,7 +36,6 @@
   </div>
 
   <!-- NAV -->
-  <main id="dashboard">
   <nav class="nav" id="nav">
     <div class="nav-inner">
       <a href="#home" class="logo">
@@ -73,6 +72,7 @@
     </nav>
   </div>
 
+  <div id="dashboard">
   <main>
 
     <!-- HOME -->
@@ -130,23 +130,35 @@
         <!-- Photo -->
         <div class="ph-col">
           <div class="ph-sc cuboid-scene">
-            <div class="cuboid" id="cuboid">
-              <div class="holo-slice" style="--i: -7;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -6;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -5;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -4;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -3;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -2;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: -1;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 0;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 1;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 2;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 3;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 4;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 5;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice" style="--i: 6;"><img src="pic.png" alt="Rajesh Pandit"></div>
-              <div class="holo-slice front" style="--i: 7;"><img src="pic.png" alt="Rajesh Pandit"></div>
-            </div>
+              <!-- Nuclear Blast / God-Tier Reveal -->
+              <div class="nuke-beast" id="nuke-beast">
+                <!-- Secret Cover -->
+                <div class="nuke-secret" id="nuke-secret">
+                  <div class="secret-label">[ Tap to Reveal ]</div>
+                </div>
+                <div class="nuke-flash" id="nuke-flash"></div>
+                <canvas class="nuke-canvas" id="nuke-canvas"></canvas>
+
+                <div class="nuke-image-wrapper" id="nuke-image" style="opacity:0;">
+                  <div class="cuboid" id="cuboid">
+                    <div class="holo-slice" style="--i: -7;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: -6;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: -5;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: -4;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: -3;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: -2;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: -1;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: 0;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: 1;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: 2;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: 3;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: 4;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: 5;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice" style="--i: 6;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                    <div class="holo-slice front" style="--i: 7;"><img src="pic.png" alt="Rajesh Pandit"></div>
+                  </div>
+                </div>
+              </div>
             <div class="ph-bdg" style="position: absolute; bottom: -40px; right: 20px; z-index: 10;">
               <div class="ph-dot"></div>
               <span class="ph-txt">Open to opportunities</span>
@@ -412,9 +424,9 @@
 
         <!-- SKILL NETWORK GRAPH -->
         <div class="sk-graph-wrap rv">
-          <div class="sk-graph-label">Skill Network — hover to explore connections</div>
+          <div class="sk-graph-label">Skill Network — tap to explore connections</div>
           <canvas id="sk-graph-cv"></canvas>
-          <p class="sk-graph-hint">hover a node to highlight its connections · size = proficiency</p>
+          <p class="sk-graph-hint">tap a node to highlight its connections · size = proficiency</p>
         </div>
 
       </div>
@@ -422,6 +434,160 @@
 
     <div class="div"></div>
 
+    <!-- TELEMETRY -->
+    <section id="telemetry">
+      <div class="W">
+        <div class="rv">
+          <span class="ey">Telemetry</span>
+          <h2 class="sn">Competitive Engineering.</h2>
+        </div>
+          <div class="tel-grid">
+          
+          <!-- LEETCODE FLEX CARD -->
+          <div class="tel-card flex-card rv">
+            <div class="fc-head">
+              <div class="fc-title">
+                <img src="https://cdn.simpleicons.org/leetcode/FFA116" alt="LeetCode" style="width: 24px; height: 24px;" />
+                LeetCode
+              </div>
+              <div class="fc-badge" id="lc-top-badge">Top --%</div>
+            </div>
+            
+            <div class="fc-stats split" style="gap: 16px;">
+              <div class="fc-stat">
+                <span class="fc-label">Rating</span>
+                <span class="fc-val" id="lc-rating">--</span>
+              </div>
+              <div class="fc-stat">
+                <span class="fc-label">Contests</span>
+                <span class="fc-val" id="lc-contests">--</span>
+              </div>
+            </div>
+
+            <div class="lc-circle-wrap">
+              <div class="lc-circle-container" style="position: relative; width: 110px; height: 110px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div class="lc-circle" id="lc-circle" style="width: 100%; height: 100%; border-radius: 50%; position: absolute; -webkit-mask: radial-gradient(circle, transparent 48px, black 49px); mask: radial-gradient(circle, transparent 48px, black 49px);"></div>
+                <div class="lc-circle-inner" style="position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                  <div style="display: flex; align-items: baseline; justify-content: center;">
+                    <span id="lc-solved" style="font-size: 1.5rem; font-weight: 700; color: var(--tx);">--</span>
+                    <span style="font-size: 0.75rem; color: var(--tx3);">/4033</span>
+                  </div>
+                  <div style="font-size: 0.75rem; color: #00b8a3; display: flex; align-items: center; gap: 2px;">
+                    <i class='bx bx-check'></i> Solved
+                  </div>
+                  <div style="position: absolute; bottom: -8px; font-size: 0.7rem; color: var(--tx3); background: var(--bg1); padding: 0 4px;">
+                    <strong style="color: var(--tx);">16</strong> Attempting
+                  </div>
+                </div>
+              </div>
+              <div class="lc-circle-stats">
+                 <div class="lc-stat-row easy">
+                   <span>Easy</span> 
+                   <span class="lc-stat-nums"><strong id="lc-easy">--</strong></span>
+                 </div>
+                 <div class="lc-stat-row med">
+                   <span>Medium</span> 
+                   <span class="lc-stat-nums"><strong id="lc-med">--</strong></span>
+                 </div>
+                 <div class="lc-stat-row hard">
+                   <span>Hard</span> 
+                   <span class="lc-stat-nums"><strong id="lc-hard">--</strong></span>
+                 </div>
+              </div>
+            </div>
+            <div class="tel-bg-icon">
+               <img src="https://cdn.simpleicons.org/leetcode/222222" style="width: 120px; opacity: 0.1;" alt=""/>
+            </div>
+          </div>
+
+          <!-- CODEFORCES FLEX CARD -->
+          <div class="tel-card flex-card rv" style="transition-delay: 0.1s;">
+            <div class="fc-head">
+              <div class="fc-title">
+                <img src="https://cdn.simpleicons.org/codeforces" alt="Codeforces" style="width: 24px; height: 24px;" />
+                Codeforces
+              </div>
+              <div class="fc-badge cf" id="cf-rank-badge">--</div>
+            </div>
+            
+            <div class="fc-stats split">
+              <div class="fc-stat">
+                <span class="fc-label">Rating</span>
+                <span class="fc-val" id="cf-rating">--</span>
+              </div>
+              <div class="fc-stat">
+                <span class="fc-label">Max Rating</span>
+                <span class="fc-val" id="cf-max-rating">--</span>
+              </div>
+            </div>
+
+            <div class="fc-stats split" style="margin-top: 16px;">
+              <div class="fc-stat">
+                <span class="fc-label">Contests Attended</span>
+                <span class="fc-val" id="cf-contests">--</span>
+              </div>
+              <div class="fc-stat">
+                <span class="fc-label">Contribution</span>
+                <span class="fc-val" id="cf-contrib">--</span>
+              </div>
+            </div>
+            <div class="tel-bg-icon">
+              <img src="https://cdn.simpleicons.org/codeforces/222222" style="width: 120px; opacity: 0.1;" alt=""/>
+            </div>
+          </div>
+
+          <!-- GITHUB FLEX CARD -->
+          <div class="tel-card flex-card rv" style="transition-delay: 0.2s;">
+            <div class="fc-head">
+              <div class="fc-title">
+                <img src="https://cdn.simpleicons.org/github/FFFFFF" alt="GitHub" style="width: 24px; height: 24px;" />
+                GitHub
+              </div>
+              <div class="fc-badge gh">PRO / Arctic Vault</div>
+            </div>
+            
+            <div class="fc-stats split">
+              <div class="fc-stat">
+                <span class="fc-label">Total Repositories</span>
+                <span class="fc-val" id="gh-repos">--</span>
+              </div>
+              <div class="fc-stat">
+                <span class="fc-label">Longest Streak</span>
+                <span class="fc-val">42 Days</span>
+              </div>
+            </div>
+
+            <div class="fc-stats split" style="margin-top: 16px;">
+              <div class="fc-stat">
+                <span class="fc-label">Total Contributions</span>
+                <span class="fc-val" id="gh-contribs">1,402+</span>
+              </div>
+              <div class="fc-stat">
+                <span class="fc-label">Total Commits</span>
+                <span class="fc-val">314+</span>
+              </div>
+            </div>
+            <div class="tel-bg-icon"><i class='bx bxl-github'></i></div>
+          </div>
+
+        </div>
+
+        <!-- Activity Calendar -->
+        <div class="tel-calendar-wrap rv" style="margin-top: 40px;">
+          <div class="tel-head" style="margin-bottom: 16px;">
+            <i class='bx bx-git-commit tel-icon' style="color: var(--tx);"></i>
+            <span class="tel-title">Continuous Integration Matrix</span>
+          </div>
+          <div class="tel-calendar" style="background: var(--bg1); border: 1px solid var(--bdr); border-radius: 14px; padding: 24px; overflow-x: auto; backdrop-filter: blur(24px) saturate(150%);">
+            <div id="lc-heatmap" style="position: relative; padding-top: 20px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="div"></div>
+
+    
     <!-- JOURNEY -->
     <section id="journey">
       <div class="W">
@@ -589,12 +755,13 @@
       </span>
     </div>
   </footer>
-  </main>
+  </div>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
   <div id="flash-overlay"></div>
   <script src="script.js"></script>
+  <script src="nuke-beast.js"></script>
 </body>
 
 </html>
