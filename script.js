@@ -3,34 +3,371 @@
   const D = document,
     H = D.documentElement;
 
-  /* ══ 1. BOOT SCREEN ═══════════════════════════════════════════ */
-  const bootEl = D.getElementById("boot"),
-    bbar = D.getElementById("bbar"),
-    btxt = D.getElementById("btxt");
-  const bootMsgs = [
-    "Initializing runtime...",
-    "Loading Node.js cluster...",
-    "Connecting Redis Pub/Sub...",
-    "Binding Nginx upstream...",
-    "Compiling personality.cpp...",
-    "Portfolio ready.",
-  ];
-  let bi = 0,
-    bp = 0;
-  function bootStep() {
-    if (bi >= bootMsgs.length) {
-      setTimeout(() => {
-        bootEl.classList.add("done");
-        D.body.classList.add("boot-complete");
-      }, 400);
-      return;
+  /* ══ 1. BLACK HOLE SINGULARITY BOOT ═════════════════════════ */
+  const bootEl = D.getElementById("boot");
+
+  (function blackHoleBoot() {
+    const cv = D.getElementById("boot-canvas");
+    if (!cv) return;
+    const cx = cv.getContext("2d");
+    let W, HT;
+    const isMob = window.innerWidth < 768;
+
+    function resize() {
+      W = cv.width = window.innerWidth;
+      HT = cv.height = window.innerHeight;
     }
-    btxt.textContent = bootMsgs[bi++];
-    bp = Math.min(bp + Math.floor(100 / bootMsgs.length) + 1, 100);
-    bbar.style.width = bp + "%";
-    setTimeout(bootStep, bi === bootMsgs.length ? 600 : 320);
-  }
-  setTimeout(bootStep, 200);
+    resize();
+    window.addEventListener("resize", resize, { passive: true });
+
+    // ── DOM refs ──
+    const percentEl = D.getElementById("bh-percent");
+    const statusEl  = D.getElementById("bh-status");
+    const diagEl    = D.getElementById("bh-diag");
+    const massEl    = D.getElementById("bh-mass");
+    const tempEl    = D.getElementById("bh-temp");
+    const pullEl    = D.getElementById("bh-pull");
+    const fluxEl    = D.getElementById("bh-flux");
+    const fpsEl     = D.getElementById("bh-fps");
+    const shatterEl = D.getElementById("bh-shatter");
+
+    // ── Diagnostic messages ──
+    const msgs = [
+      "Initializing event horizon...",
+      "Bending spacetime fabric...",
+      "Capturing stellar matter...",
+      "Igniting accretion disk...",
+      "Compressing gravitational core...",
+      "Binding quantum threads...",
+      "Loading distributed clusters...",
+      "Encrypting warp signatures...",
+      "Syncing orbital mechanics...",
+      "Charging singularity core...",
+      "Calibrating Hawking radiation...",
+      "Approaching critical mass...",
+      "SUPERNOVA IMMINENT",
+    ];
+
+    // ── State ──
+    let progress = 0;           // 0..1
+    let phase = "loading";      // "loading" | "supernova" | "done"
+    let bootAnimId;
+    let msgIdx = 0;
+    let msgTimer = 0;
+    let holeRadius = 0;
+    let accretionIntensity = 0;
+    let accretionAngle = 0;
+    let shakeAmount = 0;
+    let supernovaRadius = 0;
+    let supernovaAlpha = 0;
+    let lastTime = performance.now();
+    let frameCount = 0, fpsCounter = 0, lastFpsTime = performance.now();
+
+    // ── Stars ──
+    const STAR_COUNT = isMob ? 200 : 500;
+    const stars = [];
+    class Star {
+      constructor() { this.reset(); }
+      reset() {
+        const angle = Math.random() * Math.PI * 2;
+        const dist = Math.random() * Math.max(W, HT) * 0.8 + 100;
+        this.x = W / 2 + Math.cos(angle) * dist;
+        this.y = HT / 2 + Math.sin(angle) * dist;
+        this.ox = this.x; this.oy = this.y;
+        this.size = Math.random() * 2 + 0.3;
+        this.brightness = Math.random() * 0.7 + 0.3;
+        this.speed = Math.random() * 0.5 + 0.1;
+        this.consumed = false;
+        // Slight color variation
+        const temp = Math.random();
+        if (temp < 0.3) this.color = [180, 200, 255];       // Blue-white
+        else if (temp < 0.6) this.color = [255, 240, 220];  // Warm white
+        else if (temp < 0.8) this.color = [255, 200, 150];  // Orange
+        else this.color = [200, 180, 255];                   // Violet
+      }
+    }
+    for (let i = 0; i < STAR_COUNT; i++) stars.push(new Star());
+
+    // ── Accretion disk particles ──
+    const DISK_COUNT = isMob ? 120 : 300;
+    const diskParticles = [];
+    class DiskParticle {
+      constructor() {
+        this.angle = Math.random() * Math.PI * 2;
+        this.dist = Math.random() * 80 + 40;
+        this.speed = (Math.random() * 0.03 + 0.01) * (this.dist < 70 ? 1.5 : 1);
+        this.size = Math.random() * 2.5 + 0.5;
+        this.brightness = Math.random() * 0.8 + 0.2;
+        this.trail = Math.random() * 0.4 + 0.1;
+        // Color: orange → white → blue as closer to center
+        const t = 1 - ((this.dist - 40) / 80);
+        this.r = Math.floor(255 - t * 60);
+        this.g = Math.floor(140 + t * 100);
+        this.b = Math.floor(40 + t * 215);
+      }
+    }
+    for (let i = 0; i < DISK_COUNT; i++) diskParticles.push(new DiskParticle());
+
+    // ── Nebula clouds ──
+    const NEBULA_COUNT = isMob ? 6 : 12;
+    const nebulae = [];
+    for (let i = 0; i < NEBULA_COUNT; i++) {
+      nebulae.push({
+        angle: Math.random() * Math.PI * 2,
+        dist: Math.random() * 200 + 120,
+        size: Math.random() * 100 + 60,
+        r: Math.random() < 0.5 ? 138 : 80,
+        g: Math.random() < 0.5 ? 92 : 40,
+        b: Math.random() < 0.5 ? 246 : 200,
+        alpha: Math.random() * 0.04 + 0.01,
+        drift: Math.random() * 0.003 + 0.001,
+      });
+    }
+
+    // ── Boot progress driver ──
+    const BOOT_DURATION = 3500; // ms total
+    const bootStartTime = performance.now();
+
+    // ── Main render loop ──
+    function render(time) {
+      const dt = time - lastTime;
+      lastTime = time;
+
+      // FPS counter
+      frameCount++;
+      if (time - lastFpsTime > 500) {
+        fpsCounter = Math.round(frameCount / ((time - lastFpsTime) / 1000));
+        frameCount = 0;
+        lastFpsTime = time;
+        if (fpsEl) fpsEl.textContent = fpsCounter + " FPS";
+      }
+
+      const CX = W / 2 + (shakeAmount > 0 ? (Math.random() - 0.5) * shakeAmount : 0);
+      const CY = HT / 2 + (shakeAmount > 0 ? (Math.random() - 0.5) * shakeAmount : 0);
+
+      // ── Phase: Loading ──
+      if (phase === "loading") {
+        const elapsed = time - bootStartTime;
+        progress = Math.min(elapsed / BOOT_DURATION, 1);
+        holeRadius = 15 + progress * 45;
+        accretionIntensity = progress;
+        accretionAngle += (0.01 + progress * 0.03) * (dt / 16);
+        shakeAmount = progress > 0.85 ? (progress - 0.85) * 200 : 0;
+
+        // Update HUD
+        const pctVal = Math.round(progress * 100);
+        if (percentEl) percentEl.innerHTML = pctVal + '<span class="bh-pct">%</span>';
+        if (massEl) massEl.textContent = (progress * 4.31).toFixed(2);
+        if (tempEl) tempEl.textContent = Math.round(progress * 15000000).toLocaleString();
+        if (pullEl) pullEl.textContent = (progress * 9.8).toFixed(1);
+        if (fluxEl) fluxEl.textContent = (progress * 3.2).toFixed(1) + " Jy";
+
+        // Messages
+        msgTimer += dt;
+        if (msgTimer > 400 && msgIdx < msgs.length) {
+          msgTimer = 0;
+          if (diagEl) diagEl.textContent = msgs[msgIdx];
+          if (statusEl) {
+            statusEl.textContent = msgIdx < 4 ? "GRAVITATIONAL LOCK" :
+                                    msgIdx < 9 ? "ACCRETION ACTIVE" : "CRITICAL MASS";
+          }
+          msgIdx++;
+        }
+
+        // Trigger supernova
+        if (progress >= 1) {
+          phase = "supernova";
+          supernovaRadius = 0;
+          supernovaAlpha = 1;
+          shakeAmount = 30;
+          if (statusEl) statusEl.textContent = "EVENT HORIZON BREACH";
+          if (diagEl) diagEl.textContent = "⚠ SUPERNOVA DETONATION ⚠";
+        }
+      }
+
+      // ── Phase: Supernova ──
+      if (phase === "supernova") {
+        supernovaRadius += dt * 1.5;
+        supernovaAlpha = Math.max(0, 1 - supernovaRadius / (Math.max(W, HT) * 1.2));
+        shakeAmount *= 0.97;
+
+        if (supernovaRadius > Math.max(W, HT) * 0.8) {
+          phase = "done";
+          // Fire reality cracks
+          if (shatterEl) {
+            shatterEl.classList.add("active");
+            for (let i = 0; i < 8; i++) {
+              const crack = D.createElement("div");
+              crack.className = "bh-crack";
+              crack.style.top = (20 + Math.random() * 60) + "%";
+              crack.style.left = "0";
+              crack.style.transform = `rotate(${(Math.random() - 0.5) * 30}deg)`;
+              crack.style.animationDelay = (i * 0.05) + "s";
+              shatterEl.appendChild(crack);
+            }
+          }
+
+          // Final transition
+          setTimeout(() => {
+            bootEl.classList.add("done");
+            D.body.classList.add("boot-complete");
+            cancelAnimationFrame(bootAnimId);
+          }, 900);
+        }
+      }
+
+      // ── Clear ──
+      cx.fillStyle = "rgba(0,0,0,0.2)";
+      cx.fillRect(0, 0, W, HT);
+
+      // ── Draw nebulae ──
+      for (const n of nebulae) {
+        n.angle += n.drift;
+        const nx = CX + Math.cos(n.angle) * n.dist;
+        const ny = CY + Math.sin(n.angle) * n.dist;
+        const g = cx.createRadialGradient(nx, ny, 0, nx, ny, n.size * (1 + progress * 0.5));
+        g.addColorStop(0, `rgba(${n.r},${n.g},${n.b},${n.alpha * (0.5 + accretionIntensity * 2)})`);
+        g.addColorStop(1, "transparent");
+        cx.fillStyle = g;
+        cx.fillRect(nx - n.size * 2, ny - n.size * 2, n.size * 4, n.size * 4);
+      }
+
+      // ── Draw stars (gravitational pull) ──
+      for (const s of stars) {
+        if (s.consumed) continue;
+        const dx = CX - s.x, dy = CY - s.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < holeRadius) {
+          s.consumed = true;
+          continue;
+        }
+
+        // Gravitational acceleration
+        const pullStrength = progress * 800 / (dist * dist + 100);
+        s.x += (dx / dist) * pullStrength * s.speed * (dt / 16);
+        s.y += (dy / dist) * pullStrength * s.speed * (dt / 16);
+
+        // Spaghettification near event horizon
+        const stretch = dist < holeRadius * 3 ? (1 + (holeRadius * 3 - dist) / 50) : 1;
+        const alpha = s.brightness * (dist < holeRadius * 2 ? dist / (holeRadius * 2) : 1);
+        const [r, g, b] = s.color;
+
+        cx.globalAlpha = alpha;
+        cx.fillStyle = `rgb(${r},${g},${b})`;
+        cx.beginPath();
+        if (stretch > 1.2) {
+          // Elongate toward center
+          const ang = Math.atan2(dy, dx);
+          cx.ellipse(s.x, s.y, s.size * stretch, s.size, ang, 0, Math.PI * 2);
+        } else {
+          cx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        }
+        cx.fill();
+        cx.globalAlpha = 1;
+      }
+
+      // ── Accretion disk ──
+      if (accretionIntensity > 0) {
+        cx.save();
+        cx.translate(CX, CY);
+        // Tilt the disk (perspective illusion)
+        cx.scale(1, 0.35);
+        cx.rotate(accretionAngle * 0.3);
+
+        for (const dp of diskParticles) {
+          dp.angle += dp.speed * (dt / 16);
+          const px = Math.cos(dp.angle) * dp.dist * (1 + accretionIntensity * 0.5);
+          const py = Math.sin(dp.angle) * dp.dist * (1 + accretionIntensity * 0.5);
+          const a = dp.brightness * accretionIntensity;
+
+          // Glow trail
+          cx.globalAlpha = a * dp.trail;
+          cx.fillStyle = `rgb(${dp.r},${dp.g},${dp.b})`;
+          const trailAngle = dp.angle - dp.speed * 8;
+          const tx = Math.cos(trailAngle) * dp.dist * (1 + accretionIntensity * 0.5);
+          const ty = Math.sin(trailAngle) * dp.dist * (1 + accretionIntensity * 0.5);
+          cx.beginPath();
+          cx.moveTo(px, py);
+          cx.lineTo(tx, ty);
+          cx.lineWidth = dp.size * 0.8;
+          cx.strokeStyle = `rgba(${dp.r},${dp.g},${dp.b},${a * 0.3})`;
+          cx.stroke();
+
+          // Particle
+          cx.globalAlpha = a;
+          cx.beginPath();
+          cx.arc(px, py, dp.size, 0, Math.PI * 2);
+          cx.fill();
+        }
+        cx.globalAlpha = 1;
+        cx.restore();
+
+        // Disk glow halo
+        const diskGlow = cx.createRadialGradient(CX, CY, holeRadius, CX, CY, holeRadius + 100 * accretionIntensity);
+        diskGlow.addColorStop(0, `rgba(138,92,246,${0.15 * accretionIntensity})`);
+        diskGlow.addColorStop(0.5, `rgba(255,140,50,${0.08 * accretionIntensity})`);
+        diskGlow.addColorStop(1, "transparent");
+        cx.fillStyle = diskGlow;
+        cx.fillRect(0, 0, W, HT);
+      }
+
+      // ── Event horizon (black void) ──
+      if (holeRadius > 0) {
+        // Outer glow
+        const horizonGlow = cx.createRadialGradient(CX, CY, holeRadius * 0.5, CX, CY, holeRadius * 2.5);
+        horizonGlow.addColorStop(0, "rgba(0,0,0,1)");
+        horizonGlow.addColorStop(0.4, "rgba(0,0,0,0.9)");
+        horizonGlow.addColorStop(0.7, `rgba(138,92,246,${0.1 * accretionIntensity})`);
+        horizonGlow.addColorStop(1, "transparent");
+        cx.fillStyle = horizonGlow;
+        cx.beginPath();
+        cx.arc(CX, CY, holeRadius * 2.5, 0, Math.PI * 2);
+        cx.fill();
+
+        // Core void
+        cx.fillStyle = "#000";
+        cx.beginPath();
+        cx.arc(CX, CY, holeRadius, 0, Math.PI * 2);
+        cx.fill();
+
+        // Photon ring (thin bright ring at edge)
+        cx.strokeStyle = `rgba(200,160,255,${0.3 + accretionIntensity * 0.5})`;
+        cx.lineWidth = 1.5;
+        cx.beginPath();
+        cx.arc(CX, CY, holeRadius + 2, 0, Math.PI * 2);
+        cx.stroke();
+      }
+
+      // ── Supernova explosion ──
+      if (phase === "supernova" || (phase === "done" && supernovaAlpha > 0)) {
+        // Massive expanding shockwave
+        const g1 = cx.createRadialGradient(CX, CY, 0, CX, CY, supernovaRadius);
+        g1.addColorStop(0, `rgba(255,255,255,${supernovaAlpha})`);
+        g1.addColorStop(0.1, `rgba(200,170,255,${supernovaAlpha * 0.9})`);
+        g1.addColorStop(0.3, `rgba(138,92,246,${supernovaAlpha * 0.6})`);
+        g1.addColorStop(0.5, `rgba(255,120,50,${supernovaAlpha * 0.3})`);
+        g1.addColorStop(1, "transparent");
+        cx.fillStyle = g1;
+        cx.fillRect(0, 0, W, HT);
+
+        // Ring edge
+        if (supernovaRadius > 20) {
+          cx.strokeStyle = `rgba(255,255,255,${supernovaAlpha * 0.7})`;
+          cx.lineWidth = 4;
+          cx.beginPath();
+          cx.arc(CX, CY, supernovaRadius * 0.95, 0, Math.PI * 2);
+          cx.stroke();
+        }
+      }
+
+      if (phase !== "done" || supernovaAlpha > 0) {
+        bootAnimId = requestAnimationFrame(render);
+      }
+    }
+
+    bootAnimId = requestAnimationFrame(render);
+  })();
 
   /* ══ 2. THEME ══════════════════════════════════════════════════ */
   const stored = localStorage.getItem("rp");

@@ -26,13 +26,34 @@
     <i class="bx bx-up-arrow-alt"></i>
   </button>
 
-  <!-- ═══ BOOT SCREEN ═══ -->
+  <!-- ═══ BLACK HOLE SINGULARITY BOOT ═══ -->
   <div id="boot">
-    <div class="boot-logo">rashq_01</div>
-    <div class="boot-bar-wrap">
-      <div class="boot-bar" id="bbar"></div>
+    <canvas id="boot-canvas"></canvas>
+
+    <!-- HUD Overlay -->
+    <div class="bh-hud">
+      <div class="bh-hud-top">
+        <span class="bh-tag">SINGULARITY CORE</span>
+        <span class="bh-tag bh-tag-right" id="bh-fps">60 FPS</span>
+      </div>
+
+      <div class="bh-center-hud">
+        <div class="bh-percent" id="bh-percent">0<span class="bh-pct">%</span></div>
+        <div class="bh-status" id="bh-status">GRAVITATIONAL LOCK</div>
+      </div>
+
+      <div class="bh-diag" id="bh-diag">Initializing event horizon...</div>
+
+      <div class="bh-hud-bottom">
+        <span class="bh-metric"><span class="bh-ml">MASS</span> <span id="bh-mass">0.00</span> M☉</span>
+        <span class="bh-metric"><span class="bh-ml">TEMP</span> <span id="bh-temp">0</span>K</span>
+        <span class="bh-metric"><span class="bh-ml">PULL</span> <span id="bh-pull">0.0</span> Gn</span>
+        <span class="bh-metric"><span class="bh-ml">FLUX</span> <span id="bh-flux">--</span></span>
+      </div>
     </div>
-    <div class="boot-text" id="btxt">Initializing...</div>
+
+    <!-- Shatter overlay for reality-crack transition -->
+    <div class="bh-shatter" id="bh-shatter"></div>
   </div>
 
   <!-- NAV -->
