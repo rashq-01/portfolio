@@ -177,7 +177,7 @@ section {
   backdrop-filter: blur(1px);
 }
 
-/* ═══ BLACK HOLE SINGULARITY BOOT ═══ */
+/* ═══ BLAST WELCOME SCREEN ═══ */
 #boot {
   position: fixed;
   inset: 0;
@@ -237,28 +237,29 @@ section {
 .bh-percent {
   font-size: clamp(48px, 10vw, 80px);
   font-weight: 800;
-  color: #fff;
+  color: #000;
   letter-spacing: -0.04em;
   line-height: 1;
-  text-shadow: 0 0 40px rgba(138,92,246,0.6), 0 0 80px rgba(138,92,246,0.3);
-  transition: text-shadow 0.3s;
+  text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.4), 0 0 60px rgba(255,255,255,0.2);
+  transition: all 0.3s;
 }
 .bh-pct {
   font-size: 0.4em;
   font-weight: 400;
-  opacity: 0.5;
+  opacity: 0.8;
   vertical-align: super;
 }
 .bh-status {
   font-size: clamp(9px, 1.2vw, 11px);
   letter-spacing: 0.3em;
-  color: rgba(138,92,246,0.7);
+  color: #000;
+  text-shadow: 0 0 10px rgba(255,255,255,0.8);
   margin-top: 8px;
   animation: bhStatusPulse 2s ease-in-out infinite;
 }
 @keyframes bhStatusPulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 0.3; }
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.4; }
 }
 
 .bh-diag {
@@ -291,7 +292,7 @@ section {
   color: rgba(255,255,255,0.3);
 }
 .bh-ml {
-  color: rgba(138,92,246,0.5);
+  color: rgba(255,255,255,0.5);
   margin-right: 4px;
 }
 
@@ -306,18 +307,7 @@ section {
 .bh-shatter.active {
   opacity: 1;
 }
-.bh-crack {
-  position: absolute;
-  background: linear-gradient(90deg, transparent, rgba(200,160,255,0.8), rgba(255,255,255,0.9), rgba(200,160,255,0.8), transparent);
-  height: 2px;
-  transform-origin: center center;
-  animation: crackGrow 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-@keyframes crackGrow {
-  0% { width: 0; opacity: 0; }
-  50% { opacity: 1; }
-  100% { width: 100vw; opacity: 0.8; }
-}
+
 
 /* ═══ BOOT EXIT → EARTHQUAKE ENTRY ═══ */
 body:not(.boot-complete) #dashboard {
@@ -381,7 +371,7 @@ body.boot-complete #flash-overlay {
   animation: quakeFlash 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 @keyframes quakeFlash {
-  0% { opacity: 1; background: rgba(138,92,246,0.6); }
+  0% { opacity: 1; background: rgba(255,255,255,0.6); }
   8% { opacity: 1; background: #ffffff; }
   20% { opacity: 0.6; }
   100% { opacity: 0; }
@@ -396,7 +386,7 @@ body.boot-complete #flash-overlay {
   z-index: 900;
   background: linear-gradient(90deg, var(--a), var(--a2));
   width: 0%;
-  box-shadow: 0 0 10px rgba(54,123,240,0.5);
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
   transition: width 0.1s ease;
   pointer-events: none;
 }
