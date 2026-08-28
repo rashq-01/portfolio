@@ -1694,15 +1694,5 @@ async function fetchTelemetry() {
   }
 }
 
-// Trigger telemetry when section scrolls into view
-const telemetryObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      fetchTelemetry();
-      telemetryObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.3 });
-
-const telemetrySec = document.getElementById('telemetry');
-if(telemetrySec) telemetryObserver.observe(telemetrySec);
+// Fetch telemetry immediately
+setTimeout(fetchTelemetry, 100);
