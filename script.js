@@ -1618,6 +1618,25 @@ async function fetchTelemetry() {
         }
       }).catch(e => console.error("CF Contests Error", e));
 
+    // CodeChef (Using a generic proxy or hardcoded fallback if API fails)
+    fetch('https://codechef-api.vercel.app/handle/rashq_01')
+      .then(res => res.json())
+      .then(data => {
+        if (!data || data.success === false) return;
+        if(data.currentRating) animateValue(document.getElementById('cc-rating'), 0, data.currentRating, 2000);
+        if(data.highestRating) animateValue(document.getElementById('cc-max-rating'), 0, data.highestRating, 2000);
+        if(data.globalRank) animateValue(document.getElementById('cc-global-rank'), 0, data.globalRank, 2000);
+        if(data.countryRank) animateValue(document.getElementById('cc-country-rank'), 0, data.countryRank, 2000);
+        if(data.stars) document.getElementById('cc-stars-badge').innerText = data.stars;
+      }).catch(e => {
+        console.warn("CodeChef API failed. Falling back to cached stats.", e);
+        animateValue(document.getElementById('cc-rating'), 0, 1519, 2000);
+        animateValue(document.getElementById('cc-max-rating'), 0, 1570, 2000);
+        document.getElementById('cc-global-rank').innerText = "23711";
+        document.getElementById('cc-country-rank').innerText = "12";
+        document.getElementById('cc-stars-badge').innerText = "2★";
+      });
+
     // GitHub
     fetch('https://api.github.com/users/rashq-01')
       .then(res => res.json())
@@ -1696,3 +1715,38 @@ async function fetchTelemetry() {
 
 // Fetch telemetry immediately
 setTimeout(fetchTelemetry, 100);
+// ── LIVE AGE TICKER ──
+function updateLiveAge() {
+  const ageEl = document.getElementById("live-age");
+  if (!ageEl) return;
+  // DOB: 16/09/2004 06:30:00 PM (using 2004 instead of 2024 to match the 21+ age)
+  const dob = new Date("2004-09-16T18:30:00");
+  const now = new Date();
+  
+  let years = now.getFullYear() - dob.getFullYear();
+  let months = now.getMonth() - dob.getMonth();
+  let days = now.getDate() - dob.getDate();
+  
+  if (days < 0) {
+    months--;
+    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+  
+  let diff = now - dob;
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / 1000 / 60) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+  
+  const hStr = String(hours).padStart(2, '0');
+  const mStr = String(minutes).padStart(2, '0');
+  const sStr = String(seconds).padStart(2, '0');
+  
+  ageEl.textContent = `${years} yrs, ${months} mos, ${days} days, ${hStr}:${mStr}:${sStr}`;
+}
+setInterval(updateLiveAge, 1000);
+updateLiveAge();
