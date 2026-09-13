@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 export default function Telemetry() {
   const [lcStats, setLcStats] = useState({
-    rating: '--', contests: '--', topBadge: 'Top --%', total: '--', easy: '--', med: '--', hard: '--'
+    rating: '--', maxRating: '--', globalRank: '--', contests: '--', badges: '--', topBadge: 'Top --%', total: '--', easy: '--', med: '--', hard: '--'
   });
   const [ccStats, setCcStats] = useState({
     rating: '--', maxRating: '--', globalRank: '--', countryRank: '--', stars: '--'
@@ -32,21 +32,25 @@ export default function Telemetry() {
     };
 
     const applyLCContest = (data) => {
-      let peakRating = data.contestRating || 1742;
+      let peakRating = 1804;
       if (data.contestParticipation && Array.isArray(data.contestParticipation)) {
         const ratings = data.contestParticipation.map(c => c.rating).filter(r => typeof r === 'number');
         if (ratings.length > 0) {
           peakRating = Math.max(...ratings);
         }
       }
-      setLcStats(prev => ({ ...prev, topBadge: `Top ${data.contestTopPercentage || 12.5}%` }));
-      animateValue(val => setLcStats(prev => ({ ...prev, rating: val })), 0, peakRating, 2000, true);
-      animateValue(val => setLcStats(prev => ({ ...prev, contests: val })), 0, data.contestAttend || 45, 1500);
+
+      setLcStats(prev => ({ ...prev, topBadge: `Top ${data.contestTopPercentage || 9.25}%` }));
+      animateValue(val => setLcStats(prev => ({ ...prev, rating: val })), 0, data.contestRating || 1778, 2000, false);
+      animateValue(val => setLcStats(prev => ({ ...prev, maxRating: val })), 0, peakRating, 2000, false);
+      animateValue(val => setLcStats(prev => ({ ...prev, globalRank: val })), 0, data.contestGlobalRanking || 79915, 2000);
+      animateValue(val => setLcStats(prev => ({ ...prev, contests: val })), 0, data.contestAttend || 29, 1500);
+      animateValue(val => setLcStats(prev => ({ ...prev, badges: val })), 0, data.badges || 12, 1000);
     };
 
     const applyLCSolved = (data) => {
-      const total = data.solvedProblem || 593;
-      const ez = data.easySolved || 213, md = data.mediumSolved || 308, hd = data.hardSolved || 72;
+      const total = data.solvedProblem || 628;
+      const ez = data.easySolved || 226, md = data.mediumSolved || 324, hd = data.hardSolved || 78;
 
       animateValue(val => setLcStats(prev => ({ ...prev, easy: val })), 0, ez, 1500);
       animateValue(val => setLcStats(prev => ({ ...prev, med: val })), 0, md, 1500);
@@ -107,10 +111,10 @@ export default function Telemetry() {
         if(data && (data.contestRating || data.contestParticipation)) {
           applyLCContest(data);
         } else {
-          applyLCContest({ contestRating: 1742, contestAttend: 26, contestTopPercentage: 11.15 });
+          applyLCContest({ contestRating: 1778, contestAttend: 29, contestTopPercentage: 9.25 });
         }
       }).catch(e => {
-        applyLCContest({ contestRating: 1742, contestAttend: 26, contestTopPercentage: 11.15 });
+        applyLCContest({ contestRating: 1778, contestAttend: 29, contestTopPercentage: 9.25 });
       });
 
     fetch('https://alfa-leetcode-api.onrender.com/rashq_01/solved')
@@ -134,21 +138,31 @@ export default function Telemetry() {
           if(user.maxRating) animateValue(val => setCfStats(prev => ({ ...prev, maxRating: val })), 0, user.maxRating, 2000);
           if(user.rank) setCfStats(prev => ({ ...prev, rankBadge: String(user.rank).toUpperCase() }));
           if(user.contribution !== undefined) animateValue(val => setCfStats(prev => ({ ...prev, contrib: val })), 0, user.contribution, 1500);
+        } else {
+          throw new Error("CF API failed");
         }
-      }).catch(e => console.error("CF Error", e));
+      }).catch(e => {
+        animateValue(val => setCfStats(prev => ({ ...prev, rating: val })), 0, 1104, 2000);
+        animateValue(val => setCfStats(prev => ({ ...prev, maxRating: val })), 0, 1104, 2000);
+        setCfStats(prev => ({ ...prev, rankBadge: 'NEWBIE' }));
+      });
 
     fetch('https://codeforces.com/api/user.rating?handle=rashq_01')
       .then(res => res.json())
       .then(data => {
         if (data && data.status === "OK") {
           animateValue(val => setCfStats(prev => ({ ...prev, contests: val })), 0, data.result.length, 1500);
+        } else {
+          throw new Error("CF Contests API failed");
         }
-      }).catch(e => console.error("CF Contests Error", e));
+      }).catch(e => {
+        animateValue(val => setCfStats(prev => ({ ...prev, contests: val })), 0, 5, 1500);
+      });
 
     fetch('https://codechef-api.vercel.app/handle/rashq_01')
       .then(res => res.json())
       .then(data => {
-        if (!data || data.success === false) return;
+        if (!data || data.success === false) throw new Error("CC API failed");
         if(data.currentRating) animateValue(val => setCcStats(prev => ({ ...prev, rating: val })), 0, data.currentRating, 2000);
         if(data.highestRating) animateValue(val => setCcStats(prev => ({ ...prev, maxRating: val })), 0, data.highestRating, 2000);
         if(data.globalRank) animateValue(val => setCcStats(prev => ({ ...prev, globalRank: val })), 0, data.globalRank, 2000);
@@ -166,8 +180,12 @@ export default function Telemetry() {
       .then(data => {
         if (data && data.public_repos !== undefined) {
           animateValue(setGhRepos, 0, data.public_repos, 1500);
+        } else {
+          animateValue(setGhRepos, 0, 42, 1500);
         }
-      }).catch(e => console.error("GH Error", e));
+      }).catch(e => {
+        animateValue(setGhRepos, 0, 42, 1500);
+      });
 
     fetch('https://alfa-leetcode-api.onrender.com/rashq_01/calendar')
       .then(res => res.ok ? res.json() : null)
@@ -179,7 +197,7 @@ export default function Telemetry() {
           heatmapEl.innerHTML = '';
           
           const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-          let html = `<div style="display: flex; gap: 16px;">`;
+          let html = `<div style="display: flex; gap: 16px; width: max-content;">`;
           
           const now = new Date();
           const todayUTC = Math.floor(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) / 1000);
@@ -253,6 +271,17 @@ export default function Telemetry() {
               <div className="fc-stat">
                 <span className="fc-label">Rating</span>
                 <span className="fc-val" id="lc-rating">{lcStats.rating}</span>
+              </div>
+              <div className="fc-stat">
+                <span className="fc-label">Max Rating</span>
+                <span className="fc-val" id="lc-max-rating">{lcStats.maxRating}</span>
+              </div>
+            </div>
+
+            <div className="fc-stats split" style={{gap: '16px', marginTop: '16px'}}>
+              <div className="fc-stat">
+                <span className="fc-label">Global Rank</span>
+                <span className="fc-val" id="lc-global-rank">{lcStats.globalRank}</span>
               </div>
               <div className="fc-stat">
                 <span className="fc-label">Contests</span>

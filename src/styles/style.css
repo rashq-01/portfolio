@@ -3303,3 +3303,25 @@ footer {
   box-shadow: 0 0 50px var(--tx), inset 0 0 30px var(--tx);
 }
 
+
+@media (max-width: 768px) {
+  .tel-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  .tel-card {
+    position: sticky !important;
+    margin-bottom: 80px !important;
+    width: 100% !important;
+    will-change: auto !important;
+    transform: none !important;
+    background: var(--bg1) !important;
+    backdrop-filter: blur(24px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+  }
+  .tel-card:nth-child(1) { top: 90px !important; z-index: 10 !important; }
+  .tel-card:nth-child(2) { top: 110px !important; z-index: 11 !important; }
+  .tel-card:nth-child(3) { top: 130px !important; z-index: 12 !important; }
+  .tel-card:nth-child(4) { top: 150px !important; z-index: 13 !important; }
+}

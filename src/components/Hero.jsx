@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Typed from 'typed.js';
+import InteractiveTerminal from "./InteractiveTerminal";
 import "../styles/cuboid.css";
 
 export default function Hero() {
@@ -16,21 +17,6 @@ export default function Hero() {
   const [wscValue, setWscValue] = useState(0);
 
   useEffect(() => {
-    // 1. Typed.js
-    const typed = new Typed(typedElRef.current, {
-      strings: [
-        "sudo su",
-        "git add .",
-        "redis-cli",
-        "npm run dev"
-      ],
-      typeSpeed: 48,
-      backSpeed: 24,
-      backDelay: 1400,
-      loop: true,
-      showCursor: false,
-    });
-
     // 2. Stats Counter Animation
     const wscEl = document.getElementById("wsc");
     let wscObserver = null;
@@ -58,7 +44,6 @@ export default function Hero() {
     }
 
     return () => {
-      typed.destroy();
       if (wscObserver) wscObserver.disconnect();
     };
   }, []);
@@ -498,19 +483,7 @@ export default function Hero() {
             <span className="ks">"Engineering Student"</span>
             <span className="ko"> // scale&#x221E;</span>
           </div>
-          <div className="h-term">
-            <div className="t-bar">
-              <div className="td td1"></div>
-              <div className="td td2"></div>
-              <div className="td td3"></div>
-              <span className="t-ttl">bash &mdash; rajesh@dev:~</span>
-            </div>
-            <div className="t-body">
-              <span className="t-ps"><span className="t-us">rajesh</span><span className="t-at">@</span><span
-                  className="t-ht">kali</span><span className="t-at">:~$&nbsp;</span></span>
-              <span className="t-tx" id="typed-el" ref={typedElRef}></span><span className="t-cr"></span>
-            </div>
-          </div>
+          <InteractiveTerminal />
           <p className="h-desc"><strong>Backend engineer</strong> building distributed infrastructure, real-time platforms,
             and APIs engineered to handle massive concurrency. I think in systems — not just code.</p>
           <div className="h-actions">
