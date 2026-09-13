@@ -2568,7 +2568,6 @@ footer {
   .pj:nth-child(2), .sk:nth-child(2) { top: 110px; z-index: 11; }
   .pj:nth-child(3), .sk:nth-child(3) { top: 130px; z-index: 12; }
   .pj:nth-child(4), .sk:nth-child(4) { top: 150px; z-index: 13; }
-  .pj:nth-child(5), .sk:nth-child(5) { top: 170px; z-index: 14; }
   .pj:nth-child(6), .sk:nth-child(6) { top: 190px; z-index: 15; }
   .pj:nth-child(7), .sk:nth-child(7) { top: 210px; z-index: 16; }
   .pj:nth-child(8), .sk:nth-child(8) { top: 230px; z-index: 17; }
@@ -2633,7 +2632,6 @@ footer {
 .jn-item:nth-child(2) { top: 120px; z-index: 11; }
 .jn-item:nth-child(3) { top: 140px; z-index: 12; }
 .jn-item:nth-child(4) { top: 160px; z-index: 13; }
-.jn-item:nth-child(5) { top: 180px; z-index: 14; }
 .jn-item:nth-child(6) { top: 200px; z-index: 15; }
 
 .jn-card {
