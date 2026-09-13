@@ -1,0 +1,88 @@
+/* ═══ REAL CUBOID (Depth = Height) ═══ */
+.real-cuboid-scene {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4; /* Portrait space */
+  perspective: 1500px;
+}
+
+.nuke-image-wrapper {
+  container-type: size;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: transparent !important;
+}
+
+.nuke-beast.revealed {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.nuke-beast.revealed::after {
+  display: none !important;
+}
+
+.real-cuboid {
+  /* Box is Width W, Height H, Depth H */
+  --w: 100cqw;
+  --h: 100cqh;
+  
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  cursor: grab;
+  /* Initial rotation */
+  transform: rotateX(-15deg) rotateY(-25deg);
+}
+.real-cuboid:active { cursor: grabbing; }
+
+.cube-face {
+  position: absolute;
+  border: 2px solid rgba(0, 229, 255, 0.4);
+  box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.2);
+  background: transparent; 
+  overflow: hidden;
+  /* Center all faces in the parent before applying transforms */
+  left: 50%;
+  top: 50%;
+}
+.cube-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.95;
+}
+
+/* Front, Back, Top, Bottom are all identically sized portrait rectangles (W x H) */
+.cube-front, .cube-back, .cube-top, .cube-bottom {
+  width: var(--w);
+  height: var(--h);
+  margin-left: calc(var(--w) / -2);
+  margin-top: calc(var(--h) / -2);
+}
+
+/* Front & Back push out by Depth/2 (which is H/2) */
+.cube-front { transform: translateZ(calc(var(--h) / 2)); }
+.cube-back  { transform: rotateY(180deg) translateZ(calc(var(--h) / 2)); }
+
+/* Top & Bottom rotate X and push out by Height/2 (which is H/2) */
+.cube-top    { transform: rotateX(90deg) translateZ(calc(var(--h) / 2)); }
+.cube-bottom { transform: rotateX(-90deg) translateZ(calc(var(--h) / 2)); }
+
+/* Left & Right must cover the Depth (H) and Height (H), so they are Squares (H x H) */
+.cube-left, .cube-right {
+  width: var(--h);
+  height: var(--h);
+  margin-left: calc(var(--h) / -2);
+  margin-top: calc(var(--h) / -2);
+}
+/* Left & Right push out by Width/2 */
+.cube-left  { transform: rotateY(-90deg) translateZ(calc(var(--w) / 2)); }
+.cube-right { transform: rotateY(90deg) translateZ(calc(var(--w) / 2)); }

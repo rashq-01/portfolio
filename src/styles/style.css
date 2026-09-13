@@ -3150,7 +3150,74 @@ footer {
   box-shadow: 0 0 50px var(--tx), inset 0 0 30px var(--tx);
 }
 
+/* ═══ GOD-LEVEL GEOMETRY FX ═══ */
+.fx-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 25;
+  pointer-events: none;
+  border-radius: 20px;
+  opacity: 0;
+}
 
+/* Blinding flash for shatter */
+.shatter-flash {
+  animation: shatter-flash-anim 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+@keyframes shatter-flash-anim {
+  0% { filter: brightness(10) contrast(200%); opacity: 1; transform: scale(0.95); }
+  20% { filter: brightness(5) contrast(150%); transform: scale(1.02); }
+  100% { filter: brightness(1) contrast(100%); opacity: 1; transform: scale(1); }
+}
+
+/* Holy geometry glow */
+.nuke-beast.revealed::after {
+  content: '';
+  position: absolute;
+  top: -3px; left: -3px; right: -3px; bottom: -3px;
+  border-radius: 22px;
+  box-shadow:
+    0 0 30px rgba(255, 255, 255, 0.1),
+    inset 0 0 20px rgba(0, 229, 255, 0.1);
+  animation: holy-pulse 4s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+@keyframes holy-pulse {
+  0%, 100% { opacity: 0.5; box-shadow: 0 0 20px rgba(0, 229, 255, 0.1); }
+  50% { opacity: 1; box-shadow: 0 0 50px rgba(0, 229, 255, 0.4), 0 0 100px rgba(255, 255, 255, 0.2); }
+}
+
+/* Sacred HUD (Overrides) */
+.nuke-hud.sacred-mode .hud-corner {
+  border-color: #fff;
+  box-shadow: 0 0 15px #00e5ff, inset 0 0 10px #00e5ff;
+  border-width: 2px;
+  border-radius: 0;
+  width: 30px; height: 30px;
+  transition: all 0.3s;
+}
+.nuke-hud.sacred-mode .hud-scanline {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+  box-shadow: 0 0 20px #00e5ff, 0 0 40px #fff;
+  height: 2px;
+  animation: sacred-scan 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes sacred-scan {
+  0% { top: -10%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 110%; opacity: 0; }
+}
+.nuke-hud.sacred-mode .hud-label {
+  color: #fff;
+  text-shadow: 0 0 10px #00e5ff;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
 .cuboid-scene {
   position: relative;
   width: 100%;

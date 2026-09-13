@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Typed from 'typed.js';
+import "../styles/cuboid.css";
 
 export default function Hero() {
   const nukeWrapRef = useRef(null);
@@ -8,6 +9,7 @@ export default function Hero() {
   const nukeCanvasRef = useRef(null);
   const nukeHudRef = useRef(null);
   const nukeSecretRef = useRef(null);
+  const fxCanvasRef = useRef(null);
   const typedElRef = useRef(null);
 
   // Stats Counter state
@@ -78,6 +80,7 @@ export default function Hero() {
     canvas.width = W; canvas.height = H;
 
     let particles = [], animId = null, phase = 'idle';
+    let fxAnimId = null, orbitalAnimId = null;
     const CX = W / 2, CY = H / 2;
     
     if (secret) {
@@ -297,7 +300,7 @@ export default function Hero() {
       setTimeout(() => {
         if (phase !== 'blast') return;
         phase = 'reveal';
-        revealPicture();
+        cinematicReveal();
       }, 2800);
     }
 
@@ -307,17 +310,30 @@ export default function Hero() {
       img.style.opacity = '0';
       img.style.clipPath = 'none';
       img.style.filter = 'none';
-
       setTimeout(() => {
         img.style.transition = 'transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s';
         img.style.transform = 'perspective(1000px) translateZ(0px) scale(1)';
         img.style.opacity = '1';
       }, 100);
-
-      setTimeout(() => {
-        if (hud) hud.classList.add('active');
-      }, 600);
+      setTimeout(() => { if (hud) hud.classList.add('active'); }, 600);
     }
+
+    function cinematicReveal() {
+      // Just reveal the photo wrapper and trigger the cuboid visibility
+      img.style.transition = 'opacity 1s ease-in, transform 1s cubic-bezier(0.25, 1, 0.5, 1)';
+      img.style.opacity = '1';
+      img.style.transform = 'scale(1)';
+      img.style.filter = 'none';
+      img.style.clipPath = 'none';
+      
+      // Also show HUD
+      if (hud) {
+        hud.classList.add('active');
+        hud.classList.add('sacred-mode');
+      }
+      wrap.classList.add('revealed');
+    }
+
 
     function loop() {
       ctx.globalCompositeOperation = 'destination-out';
@@ -354,33 +370,27 @@ export default function Hero() {
     return () => {
       wrap.removeEventListener('click', handleClick);
       if (animId) cancelAnimationFrame(animId);
+      if (fxAnimId) cancelAnimationFrame(fxAnimId);
+      if (orbitalAnimId) cancelAnimationFrame(orbitalAnimId);
     };
   }, []);
 
-  // 4. Cuboid 3D Rotation
+  // 4. Real 3D Cuboid Rotation with Inertia
   useEffect(() => {
-    const cube = document.getElementById("cuboid");
+    const cube = document.getElementById("real-cuboid");
     if (!cube) return;
 
-    let rX = -10, rY = -20;
+    let rX = -15, rY = -25;
     let drag = false;
     let startX, startY;
     let baseRX = rX, baseRY = rY;
-    let autoRotate = true;
-    let lastTime = performance.now();
-    let speed = 0.02;
     
     let vX = 0, vY = 0;
     let lastDragX, lastDragY, lastDragTime;
     let animId;
+    let lastTime = performance.now();
 
-    function updateFaces() {
-      cube.style.setProperty('--w', `${cube.offsetWidth}px`);
-      cube.style.setProperty('--h', `${cube.offsetHeight}px`);
-    }
-    
-    window.addEventListener('resize', updateFaces, { passive: true });
-    updateFaces();
+    const CONSTANT_SPEED = 0.05; // Base rotation speed
 
     function render(time) {
       const dt = time - lastTime;
@@ -388,12 +398,14 @@ export default function Hero() {
       
       if (!drag) {
         if (Math.abs(vX) > 0.001 || Math.abs(vY) > 0.001) {
+          // Inertia
           rY += vX * dt;
           rX += vY * dt;
-          vX *= 0.95;
+          vX *= 0.95; // Friction
           vY *= 0.95;
-        } else if (autoRotate) {
-          rY += speed * dt;
+        } else {
+          // Constant rotation
+          rY += CONSTANT_SPEED * dt;
         }
       }
       
@@ -404,7 +416,6 @@ export default function Hero() {
 
     const onDown = (e) => {
       drag = true;
-      autoRotate = false;
       startX = e.clientX || (e.touches && e.touches[0].clientX);
       startY = e.clientY || (e.touches && e.touches[0].clientY);
       baseRX = rX;
@@ -430,11 +441,10 @@ export default function Hero() {
       rX = baseRX - dy * 0.5;
       
       const now = performance.now();
-      const dt = now - lastDragTime;
-      if (dt > 0) {
-        vX = (curX - lastDragX) * 0.5 / dt;
-        vY = -(curY - lastDragY) * 0.5 / dt;
-      }
+      const dt = Math.max(1, now - lastDragTime); // Prevent div by 0
+      
+      vX = (curX - lastDragX) * 0.5 / dt;
+      vY = -(curY - lastDragY) * 0.5 / dt;
       
       lastDragX = curX;
       lastDragY = curY;
@@ -443,7 +453,6 @@ export default function Hero() {
     
     const onUp = () => {
       drag = false;
-      autoRotate = true;
       cube.style.cursor = 'grab';
       
       if (performance.now() - lastDragTime > 100) {
@@ -466,7 +475,6 @@ export default function Hero() {
     cube.addEventListener('touchmove', onTouchMove, { passive: false });
 
     return () => {
-      window.removeEventListener('resize', updateFaces);
       cube.removeEventListener('mousedown', onDown);
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
@@ -474,7 +482,7 @@ export default function Hero() {
       window.removeEventListener('touchmove', onMove);
       window.removeEventListener('touchend', onUp);
       cube.removeEventListener('touchmove', onTouchMove);
-      cancelAnimationFrame(animId);
+      if (animId) cancelAnimationFrame(animId);
     };
   }, []);
 
@@ -533,31 +541,24 @@ export default function Hero() {
         
         {/* Photo */}
         <div className="ph-col">
-          <div className="ph-sc cuboid-scene">
+          <div className="ph-sc real-cuboid-scene">
               <div className="nuke-beast" id="nuke-beast" ref={nukeWrapRef}>
                 <div className="nuke-secret" id="nuke-secret" ref={nukeSecretRef}>
                   <div className="secret-label">[ Tap to Reveal ]</div>
                 </div>
                 <div className="nuke-flash" id="nuke-flash" ref={nukeFlashRef}></div>
                 <canvas className="nuke-canvas" id="nuke-canvas" ref={nukeCanvasRef}></canvas>
+                <canvas className="fx-canvas" id="fx-canvas" ref={fxCanvasRef}></canvas>
+
 
                 <div className="nuke-image-wrapper" id="nuke-image" ref={nukeImgRef} style={{opacity: 0}}>
-                  <div className="cuboid" id="cuboid">
-                    <div className="holo-slice" style={{"--i": -7}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": -6}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": -5}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": -4}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": -3}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": -2}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": -1}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": 0}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": 1}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": 2}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": 3}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": 4}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": 5}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice" style={{"--i": 6}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="holo-slice front" style={{"--i": 7}}><img src="/pic.png" alt="Rajesh Pandit" /></div>
+                  <div className="real-cuboid" id="real-cuboid">
+                    <div className="cube-face cube-front"><img src="/pic.png" alt="Rajesh Pandit" /></div>
+                    <div className="cube-face cube-back"><img src="/pic.png" alt="Rajesh Pandit" /></div>
+                    <div className="cube-face cube-left"><img src="/pic.png" alt="Rajesh Pandit" /></div>
+                    <div className="cube-face cube-right"><img src="/pic.png" alt="Rajesh Pandit" /></div>
+                    <div className="cube-face cube-top"><img src="/pic.png" alt="Rajesh Pandit" /></div>
+                    <div className="cube-face cube-bottom"><img src="/pic.png" alt="Rajesh Pandit" /></div>
                   </div>
                 </div>
               </div>
