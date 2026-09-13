@@ -553,12 +553,12 @@ export default function Hero() {
 
                 <div className="nuke-image-wrapper" id="nuke-image" ref={nukeImgRef} style={{opacity: 0}}>
                   <div className="real-cuboid" id="real-cuboid">
-                    <div className="cube-face cube-front"><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="cube-face cube-back"><img src="/pic.png" alt="Rajesh Pandit" /></div>
+                    <div className="cube-face cube-front"><img src="/pic_1.jpg" alt="Rajesh Pandit" /></div>
+                    <div className="cube-face cube-back"><img src="/pic_1.jpg" alt="Rajesh Pandit" /></div>
                     <div className="cube-face cube-left"><img src="/pic.png" alt="Rajesh Pandit" /></div>
                     <div className="cube-face cube-right"><img src="/pic.png" alt="Rajesh Pandit" /></div>
                     <div className="cube-face cube-top"><img src="/pic.png" alt="Rajesh Pandit" /></div>
-                    <div className="cube-face cube-bottom"><img src="/pic.png" alt="Rajesh Pandit" /></div>
+                    <div className="cube-face cube-bottom"><img src="/pic_1.jpg" alt="Rajesh Pandit" /></div>
                   </div>
                 </div>
               </div>
