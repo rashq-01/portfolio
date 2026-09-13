@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './components/Navbar.jsx';
 import BootScreen from './components/BootScreen.jsx';
 import BackgroundCanvas from './components/BackgroundCanvas.jsx';
@@ -116,6 +118,8 @@ export default function App() {
       </div>
 
       <div id="flash-overlay"></div>
+      <Analytics />
+      <SpeedInsights />
     </>
   );
 }

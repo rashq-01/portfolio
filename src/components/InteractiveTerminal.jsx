@@ -20,10 +20,13 @@ export default function InteractiveTerminal() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [typingOutput, setTypingOutput] = useState('');
+  const [cmdHistory, setCmdHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   
   const containerRef = useRef(null);
   const inputRef = useRef(null);
   const typingIntervalRef = useRef(null);
+  const audioCtxRef = useRef(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -31,15 +34,69 @@ export default function InteractiveTerminal() {
     }
   }, [history, typingOutput]);
 
+  const playClick = () => {
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const ctx = audioCtxRef.current;
+      if (ctx.state === 'suspended') ctx.resume();
+      
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600 + Math.random() * 200, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.015);
+      
+      gain.gain.setValueAtTime(0.05, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.015);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.015);
+    } catch (e) {}
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (cmdHistory.length > 0 && historyIndex < cmdHistory.length - 1) {
+        const nextIdx = historyIndex + 1;
+        setHistoryIndex(nextIdx);
+        setInput(cmdHistory[cmdHistory.length - 1 - nextIdx]);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        const nextIdx = historyIndex - 1;
+        setHistoryIndex(nextIdx);
+        setInput(cmdHistory[cmdHistory.length - 1 - nextIdx]);
+      } else if (historyIndex === 0) {
+        setHistoryIndex(-1);
+        setInput('');
+      }
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const availableCmds = Object.keys(commandsList).concat(['clear', 'echo']);
+      const match = availableCmds.find(c => c.startsWith(input.toLowerCase()));
+      if (match) setInput(match);
+    }
+  };
+
   const handleCommand = (e) => {
     e.preventDefault();
     if (isTyping) return;
     
     const fullCmd = input.trim();
+    if (!fullCmd) return;
+    
+    setCmdHistory(prev => [...prev, fullCmd]);
+    setHistoryIndex(-1);
+
     const args = fullCmd.split(' ');
     const cmd = args[0].toLowerCase();
-    
-    if (!cmd) return;
 
     if (cmd === 'clear') {
       setHistory([]);
@@ -66,6 +123,9 @@ export default function InteractiveTerminal() {
     let i = 0;
     typingIntervalRef.current = setInterval(() => {
       setTypingOutput(responseText.slice(0, i + 1));
+      if (responseText[i] !== ' ' && responseText[i] !== '\n') {
+        playClick();
+      }
       i++;
       if (i >= responseText.length) {
         clearInterval(typingIntervalRef.current);
@@ -119,6 +179,7 @@ export default function InteractiveTerminal() {
               type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
               style={{
                 background: 'transparent',
                 border: 'none',
