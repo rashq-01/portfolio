@@ -1,3 +1,4 @@
+import { playBlastSound } from "../utils/audio";
 import React, { useEffect, useRef, useState } from 'react';
 import Typed from 'typed.js';
 import InteractiveTerminal from "./InteractiveTerminal";
@@ -236,6 +237,7 @@ export default function Hero() {
 
     function detonate() {
       phase = 'blast';
+      playBlastSound();
       particles = [];
       if (secret) secret.classList.add('gone');
 

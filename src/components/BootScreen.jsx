@@ -1,3 +1,4 @@
+import { playBlastSound } from "../utils/audio";
 import React, { useEffect, useRef, useState } from 'react';
 
 export default function BootScreen({ onComplete }) {
@@ -150,6 +151,7 @@ export default function BootScreen({ onComplete }) {
           shakeAmount = 40;
           if (statusRef.current) statusRef.current.textContent = "BLAST TRIGGERED";
           if (diagRef.current) diagRef.current.textContent = "⚠ DETONATION ⚠";
+          playBlastSound();
         }
       }
 

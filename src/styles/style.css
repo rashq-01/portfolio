@@ -83,6 +83,27 @@ body {
     background 0.4s,
     color 0.4s;
 }
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bdr2);
+  border-radius: 5px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tx2);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bdr2) var(--bg);
+}
 img {
   display: block;
   max-width: 100%;

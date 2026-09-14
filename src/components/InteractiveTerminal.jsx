@@ -1,3 +1,4 @@
+import { initAudio, playTickSound } from "../utils/audio";
 import React, { useState, useRef, useEffect } from 'react';
 
 const commandsList = {
@@ -26,49 +27,12 @@ export default function InteractiveTerminal() {
   const containerRef = useRef(null);
   const inputRef = useRef(null);
   const typingIntervalRef = useRef(null);
-  const audioCtxRef = useRef(null);
 
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [history, typingOutput]);
-
-  const initAudio = () => {
-    try {
-      if (!audioCtxRef.current) {
-        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume();
-      }
-    } catch (e) {
-      console.warn("Audio Context Init Failed", e);
-    }
-  };
-
-  const playClick = () => {
-    try {
-      if (!audioCtxRef.current) return;
-      const ctx = audioCtxRef.current;
-      if (ctx.state === 'suspended') return;
-      
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(600 + Math.random() * 200, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.015);
-      
-      gain.gain.setValueAtTime(0.4, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.025);
-      
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.015);
-    } catch (e) {}
-  };
 
   const handleKeyDown = (e) => {
     initAudio();
@@ -136,7 +100,7 @@ export default function InteractiveTerminal() {
     typingIntervalRef.current = setInterval(() => {
       setTypingOutput(responseText.slice(0, i + 1));
       if (responseText[i] !== ' ' && responseText[i] !== '\n') {
-        playClick();
+        playTickSound();
       }
       i++;
       if (i >= responseText.length) {
