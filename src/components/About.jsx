@@ -1,28 +1,41 @@
 import React, { useEffect, useState } from 'react';
 
 export default function About() {
-  const [ageStr, setAgeStr] = useState("21 yrs, 0 mos, 0 days, 00:00:00");
+  const [ageStr, setAgeStr] = useState("Calculating...");
+  const [timeOffset, setTimeOffset] = useState(0);
+
+  useEffect(() => {
+    // Fetch real global time to prevent local client clock spoofing/errors
+    fetch('https://worldtimeapi.org/api/timezone/Etc/UTC')
+      .then(res => res.json())
+      .then(data => {
+        const realTime = new Date(data.utc_datetime).getTime();
+        const localTime = Date.now();
+        setTimeOffset(realTime - localTime);
+      })
+      .catch(err => console.warn("Failed to fetch world time, falling back to local time", err));
+  }, []);
 
   useEffect(() => {
     const updateLiveAge = () => {
-      const dob = new Date("2004-09-16T18:30:00");
-      const now = new Date();
+      const dob = new Date("2004-09-16T18:30:00Z"); // Using UTC to be absolute
+      const now = new Date(Date.now() + timeOffset);
       
-      let years = now.getFullYear() - dob.getFullYear();
-      let months = now.getMonth() - dob.getMonth();
-      let days = now.getDate() - dob.getDate();
+      let years = now.getUTCFullYear() - dob.getUTCFullYear();
+      let months = now.getUTCMonth() - dob.getUTCMonth();
+      let days = now.getUTCDate() - dob.getUTCDate();
       
       if (days < 0) {
         months--;
-        const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-        days += prevMonth.getDate();
+        const prevMonth = new Date(now.getUTCFullYear(), now.getUTCMonth(), 0);
+        days += prevMonth.getUTCDate();
       }
       if (months < 0) {
         years--;
         months += 12;
       }
       
-      let diff = now - dob;
+      let diff = now.getTime() - dob.getTime();
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / 1000 / 60) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
@@ -37,7 +50,7 @@ export default function About() {
     const interval = setInterval(updateLiveAge, 1000);
     updateLiveAge();
     return () => clearInterval(interval);
-  }, []);
+  }, [timeOffset]);
 
   return (
     <section id="about">
