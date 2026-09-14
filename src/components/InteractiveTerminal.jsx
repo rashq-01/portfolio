@@ -34,13 +34,24 @@ export default function InteractiveTerminal() {
     }
   }, [history, typingOutput]);
 
-  const playClick = () => {
+  const initAudio = () => {
     try {
       if (!audioCtxRef.current) {
         audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
       }
+      if (audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume();
+      }
+    } catch (e) {
+      console.warn("Audio Context Init Failed", e);
+    }
+  };
+
+  const playClick = () => {
+    try {
+      if (!audioCtxRef.current) return;
       const ctx = audioCtxRef.current;
-      if (ctx.state === 'suspended') ctx.resume();
+      if (ctx.state === 'suspended') return;
       
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -49,8 +60,8 @@ export default function InteractiveTerminal() {
       osc.frequency.setValueAtTime(600 + Math.random() * 200, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.015);
       
-      gain.gain.setValueAtTime(0.05, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.015);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.025);
       
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -60,6 +71,7 @@ export default function InteractiveTerminal() {
   };
 
   const handleKeyDown = (e) => {
+    initAudio();
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (cmdHistory.length > 0 && historyIndex < cmdHistory.length - 1) {
@@ -144,35 +156,35 @@ export default function InteractiveTerminal() {
   }, []);
 
   return (
-    <div className="h-term" onClick={() => !isTyping && inputRef.current?.focus()}>
+    <div className="h-term" onClick={() => { initAudio(); !isTyping && inputRef.current?.focus(); }}>
       <div className="t-bar">
         <div className="td td1"></div>
         <div className="td td2"></div>
         <div className="td td3"></div>
         <span className="t-ttl">bash &mdash; rajesh@dev:~</span>
       </div>
-      <div className="t-body" ref={containerRef} style={{ overflowY: 'auto', height: '220px', display: 'flex', flexDirection: 'column' }}>
+      <div className="t-body" ref={containerRef} style={{ overflowY: 'auto', overflowX: 'hidden', height: '220px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%', boxSizing: 'border-box', textAlign: 'left' }}>
         {history.map((line, i) => (
-          <div key={i} style={{ marginBottom: '4px' }}>
+          <div key={i} style={{ marginBottom: '4px', width: '100%', textAlign: 'left' }}>
             {line.type === 'input' ? (
               <span>
                 <span className="t-ps"><span className="t-us">rajesh</span><span className="t-at">@</span><span className="t-ht">kali</span><span className="t-at">:~$ </span></span>
                 <span className="t-tx">{line.text}</span>
               </span>
             ) : (
-              <span className="t-tx" style={{ whiteSpace: 'pre-line', color: '#a3b8cc' }}>{line.text}</span>
+              <span className="t-tx" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: '#a3b8cc' }}>{line.text}</span>
             )}
           </div>
         ))}
         
         {isTyping && (
-          <div style={{ marginBottom: '4px' }}>
-            <span className="t-tx" style={{ whiteSpace: 'pre-line', color: '#a3b8cc' }}>{typingOutput}<span style={{animation: 'blink 1s step-end infinite'}}>_</span></span>
+          <div style={{ marginBottom: '4px', width: '100%', textAlign: 'left' }}>
+            <span className="t-tx" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: '#a3b8cc' }}>{typingOutput}<span style={{animation: 'blink 1s step-end infinite'}}>_</span></span>
           </div>
         )}
         
         {!isTyping && (
-          <form onSubmit={handleCommand} style={{ display: 'flex', marginTop: '4px' }}>
+          <form onSubmit={handleCommand} style={{ display: 'flex', marginTop: '4px', width: '100%', alignItems: 'center', textAlign: 'left' }}>
             <span className="t-ps"><span className="t-us">rajesh</span><span className="t-at">@</span><span className="t-ht">kali</span><span className="t-at">:~$ </span></span>
             <input 
               ref={inputRef}
@@ -185,10 +197,11 @@ export default function InteractiveTerminal() {
                 border: 'none',
                 color: '#fff',
                 fontFamily: 'inherit',
-                fontSize: 'inherit',
+                fontSize: '13px',
                 outline: 'none',
                 flex: 1,
-                marginLeft: '4px'
+                marginLeft: '4px',
+                textAlign: 'left'
               }}
               autoComplete="off"
               spellCheck="false"
