@@ -27,7 +27,7 @@ export default function About() {
       
       if (days < 0) {
         months--;
-        const prevMonth = new Date(now.getUTCFullYear(), now.getUTCMonth(), 0);
+        const prevMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 0));
         days += prevMonth.getUTCDate();
       }
       if (months < 0) {

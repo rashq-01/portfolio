@@ -5,7 +5,7 @@ const commandsList = {
   sudo: 'rajesh is not in the sudoers file. This incident will be reported to Santa Claus.',
   date: new Date().toString(),
   whoami: 'rajesh (root access denied)',
-  help: 'Available commands:\n- about     : Who is Rajesh?\n- skills    : Tech stack & tools\n- projects  : Featured work\n- contact   : How to reach me\n- email     : Display direct email\n- clear     : Clear terminal output\n- date      : Current system date\n- sudo      : Superuser access\n- echo      : Repeat after me\n- whoami    : Print current user\n- status    : System health check\n- neofetch  : System information\n- ifconfig  : Network interfaces\n- matrix    : The Matrix has you...\n- docker    : Container ASCII\n- architecture: System Design ASCII\n- database  : Database ASCII\n- server    : Server rack ASCII',
+  help: 'Available commands:\n- about     : Who is Rajesh?\n- skills    : Tech stack & tools\n- projects  : Featured work\n- contact   : How to reach me\n- email     : Display direct email\n- clear     : Clear terminal output\n- date      : Current system date\n- sudo      : Superuser access\n- echo      : Repeat after me\n- whoami    : Print current user\n- status    : System health check\n- deploy    : [LIVE] Deploy infrastructure\n- nmap      : [LIVE] Scan network ports\n- neofetch  : System information\n- ifconfig  : Network interfaces\n- matrix    : The Matrix has you...\n- docker    : Container ASCII\n- architecture: System Design ASCII\n- database  : Database ASCII\n- server    : Server rack ASCII',
   about: 'Rajesh Pandit - Backend Engineer.\nI build distributed infrastructure, real-time platforms, and APIs engineered to handle massive concurrency. I think in systems — not just code.',
   skills: 'Backend: Node.js, Python, C++, Go\nDatabases: MongoDB, PostgreSQL, Redis\nArchitecture: Microservices, WebSockets, Pub/Sub\nCloud: AWS, Docker, Kubernetes',
   projects: '1. NexusChat - Real-time scalable messaging system\n2. LibraTech - Advanced library management API\n3. AirBNB Clone - Full-stack booking platform\n4. CodeJudge - Auto-evaluating competitive platform',
@@ -85,6 +85,72 @@ export default function InteractiveTerminal() {
     if (cmd === 'clear') {
       setHistory([]);
       setInput('');
+      return;
+    }
+
+    if (cmd === 'deploy') {
+      setHistory(prev => [...prev, { type: 'input', text: fullCmd }]);
+      setInput('');
+      setIsTyping(true);
+      setTypingOutput('');
+
+      const steps = [
+        "Initializing deployment sequence...",
+        "Building Docker image 'rashq/backend:v2.4'...",
+        "Pushing to container registry... [||||||||||] 100%",
+        "Applying Kubernetes manifests...",
+        "Waiting for pods to be ready (3/3)...",
+        "Running database migrations...",
+        "Deployment successful! Traffic routed."
+      ];
+      let stepIdx = 0;
+      
+      typingIntervalRef.current = setInterval(() => {
+        if (stepIdx < steps.length) {
+          playTickSound();
+          setHistory(prev => [...prev, { type: 'output', text: steps[stepIdx] }]);
+          stepIdx++;
+        } else {
+          clearInterval(typingIntervalRef.current);
+          setIsTyping(false);
+          setTimeout(() => inputRef.current?.focus(), 10);
+        }
+      }, 700);
+      return;
+    }
+
+    if (cmd === 'nmap') {
+      const target = args[1] || '127.0.0.1';
+      setHistory(prev => [...prev, { type: 'input', text: fullCmd }]);
+      setInput('');
+      setIsTyping(true);
+      setTypingOutput('');
+      
+      const steps = [
+        `Starting Nmap 7.92 at ${new Date().toISOString()}`,
+        `Nmap scan report for ${target}`,
+        "Host is up (0.00012s latency).",
+        "Not shown: 996 closed tcp ports (reset)",
+        "PORT     STATE SERVICE",
+        "22/tcp   open  ssh",
+        "80/tcp   open  http",
+        "443/tcp  open  https",
+        "6379/tcp open  redis",
+        `\nNmap done: 1 IP address (1 host up) scanned in 1.42 seconds`
+      ];
+      
+      let stepIdx = 0;
+      typingIntervalRef.current = setInterval(() => {
+        if (stepIdx < steps.length) {
+          playTickSound();
+          setHistory(prev => [...prev, { type: 'output', text: steps[stepIdx] }]);
+          stepIdx++;
+        } else {
+          clearInterval(typingIntervalRef.current);
+          setIsTyping(false);
+          setTimeout(() => inputRef.current?.focus(), 10);
+        }
+      }, 400);
       return;
     }
 
