@@ -159,6 +159,24 @@ export default function Telemetry() {
         animateValue(val => setCfStats(prev => ({ ...prev, contests: val })), 0, 5, 1500);
       });
 
+    fetch('https://codeforces.com/api/user.status?handle=rashq_01')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.status === "OK") {
+          const solvedSet = new Set();
+          data.result.forEach(sub => {
+            if (sub.verdict === "OK" && sub.problem) {
+              solvedSet.add(sub.problem.contestId + "-" + sub.problem.index);
+            }
+          });
+          animateValue(val => setCfStats(prev => ({ ...prev, solved: val })), 0, solvedSet.size, 2000);
+        } else {
+          throw new Error("CF Status API failed");
+        }
+      }).catch(e => {
+        animateValue(val => setCfStats(prev => ({ ...prev, solved: val })), 0, 85, 2000);
+      });
+
     fetch('https://codechef-api.vercel.app/handle/rashq_01')
       .then(res => res.json())
       .then(data => {
@@ -168,10 +186,12 @@ export default function Telemetry() {
         if(data.globalRank) animateValue(val => setCcStats(prev => ({ ...prev, globalRank: val })), 0, data.globalRank, 2000);
         if(data.countryRank) animateValue(val => setCcStats(prev => ({ ...prev, countryRank: val })), 0, data.countryRank, 2000);
         if(data.stars) setCcStats(prev => ({ ...prev, stars: data.stars }));
+        if(data.fullySolved !== undefined) animateValue(val => setCcStats(prev => ({ ...prev, solved: val })), 0, data.fullySolved?.count || data.fullySolved || 145, 2000);
       }).catch(e => {
         console.warn("CodeChef API failed. Falling back to cached stats.", e);
         animateValue(val => setCcStats(prev => ({ ...prev, rating: val })), 0, 1519, 2000);
         animateValue(val => setCcStats(prev => ({ ...prev, maxRating: val })), 0, 1570, 2000);
+        animateValue(val => setCcStats(prev => ({ ...prev, solved: val })), 0, 145, 2000);
         setCcStats(prev => ({ ...prev, globalRank: "23711", countryRank: "12", stars: "2★" }));
       });
 
@@ -386,6 +406,12 @@ export default function Telemetry() {
                 <span className="fc-val" id="cc-country-rank">{ccStats.countryRank}</span>
               </div>
             </div>
+            <div className="fc-stats split" style={{marginTop: '16px'}}>
+              <div className="fc-stat">
+                <span className="fc-label">Problems Solved</span>
+                <span className="fc-val" id="cc-solved">{ccStats.solved}</span>
+              </div>
+            </div>
             <div className="tel-bg-icon">
                <img src="https://cdn.simpleicons.org/codechef" style={{width: '120px', opacity: 0.1, filter: 'invert(1)'}} alt=""/>
             </div>
@@ -419,6 +445,12 @@ export default function Telemetry() {
               <div className="fc-stat">
                 <span className="fc-label">Contribution</span>
                 <span className="fc-val" id="cf-contrib">{cfStats.contrib}</span>
+              </div>
+            </div>
+            <div className="fc-stats split" style={{marginTop: '16px'}}>
+              <div className="fc-stat">
+                <span className="fc-label">Problems Solved</span>
+                <span className="fc-val" id="cf-solved">{cfStats.solved}</span>
               </div>
             </div>
             <div className="tel-bg-icon">

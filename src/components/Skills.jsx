@@ -61,6 +61,7 @@ export default function Skills() {
       { id:'git',      l:'Git',        cat:'tools',    r:19 },
       { id:'linux',    l:'Linux',      cat:'tools',    r:20 },
       { id:'postman',  l:'Postman',    cat:'tools',    r:16 },
+      { id:'rabbitmq', l:'RabbitMQ',   cat:'infra',    r:22 },
     ];
 
     const EDGES = [
@@ -71,6 +72,7 @@ export default function Skills() {
       ['dsa','sysdes'],['sysdes','lb'],['sysdes','scale'],['oop','cpp'],['oop','js'],
       ['cpp','c'],['git','linux'],['react','js'],['express','mongo'],['express','jwt'],
       ['python','dsa'],['lb','scale'],['redis','docker'],
+      ['rabbitmq','pubsub'],['rabbitmq','nodejs'],['rabbitmq','docker'],
     ];
 
     let vpX = 0, vpY = 0, vpZ = 1;
@@ -517,6 +519,7 @@ export default function Skills() {
               <div className="sk-it"><i className="bx bx-expand sk-ii"></i><span className="sk-in">Horizontal Scaling</span></div>
               <div className="sk-it"><i className="bx bx-mail-send sk-ii"></i><span className="sk-in">Pub/Sub</span></div>
               <div className="sk-it"><i className="bx bx-chip sk-ii"></i><span className="sk-in">Caching</span></div>
+              <div className="sk-it"><i className="bx bx-message-rounded-dots sk-ii"></i><span className="sk-in">RabbitMQ</span></div>
             </div>
           </div>
           <div className="sk rv" data-d="3">
