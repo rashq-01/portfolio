@@ -515,11 +515,11 @@ export default function Skills() {
             </div>
             <div className="sk-items">
               <div className="sk-it"><i className="bx bx-shield-quarter sk-ii"></i><span className="sk-in">Nginx</span></div>
+              <div className="sk-it"><i className="bx bx-message-rounded-dots sk-ii"></i><span className="sk-in">RabbitMQ</span></div>
               <div className="sk-it"><i className="bx bx-sitemap sk-ii"></i><span className="sk-in">Load Balancing</span></div>
               <div className="sk-it"><i className="bx bx-expand sk-ii"></i><span className="sk-in">Horizontal Scaling</span></div>
               <div className="sk-it"><i className="bx bx-mail-send sk-ii"></i><span className="sk-in">Pub/Sub</span></div>
               <div className="sk-it"><i className="bx bx-chip sk-ii"></i><span className="sk-in">Caching</span></div>
-              <div className="sk-it"><i className="bx bx-message-rounded-dots sk-ii"></i><span className="sk-in">RabbitMQ</span></div>
             </div>
           </div>
           <div className="sk rv" data-d="3">
