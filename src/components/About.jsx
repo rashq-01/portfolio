@@ -64,10 +64,23 @@ export default function About() {
             <p>I'm a computer science student who spends most of my time thinking about <strong>how systems fail at scale</strong> — and engineering them so they don't. My focus is backend infrastructure: distributed messaging, real-time WebSocket systems, load balancing, and APIs built to survive concurrency.</p>
             <p>Rather than collecting frameworks, I go deep. I built a production-grade chat platform sustaining <strong>14,500+ messages per second</strong> using Nginx load balancing, Redis Pub/Sub, and a 5-instance Node.js cluster. I write C++ to understand things at the boundary level.</p>
             <p>Goal: a software engineering role on infrastructure that millions depend on. Sharpening DSA and system design every day.</p>
-            <a href="https://drive.google.com/drive/folders/13wYCy4dZ3_jTerUbkt_yKY6EyJcbz17C?usp=sharing"
-              target="_blank" rel="noopener noreferrer" className="btn btn-b" style={{alignSelf:'flex-start', marginTop:'8px'}}>
-              <i className="bx bx-download"></i>Download R&eacute;sum&eacute;
-            </a>
+            <div className="ab-actions" style={{display:'flex', gap:'12px', flexWrap:'wrap', marginTop:'16px'}}>
+              <a 
+                href="/resume.pdf" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="btn btn-a"
+              >
+                <i className="bx bx-show"></i>View R&eacute;sum&eacute;
+              </a>
+              <a 
+                href="/resume.pdf" 
+                download="Rajesh_Pandit_Resume.pdf" 
+                className="btn btn-b"
+              >
+                <i className="bx bx-download"></i>Download CV
+              </a>
+            </div>
           </div>
           <div className="rv from-right" data-d="2">
             <div className="cp">

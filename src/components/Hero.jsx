@@ -17,6 +17,17 @@ export default function Hero() {
   // Stats Counter state
   const [wscValue, setWscValue] = useState(0);
 
+  const getYearsOld = () => {
+    const dob = new Date("2004-09-16T18:30:00Z");
+    const now = new Date();
+    let y = now.getUTCFullYear() - dob.getUTCFullYear();
+    const m = now.getUTCMonth() - dob.getUTCMonth();
+    if (m < 0 || (m === 0 && now.getUTCDate() < dob.getUTCDate())) {
+      y--;
+    }
+    return y;
+  };
+
   useEffect(() => {
     // 2. Stats Counter Animation
     const wscEl = document.getElementById("wsc");
@@ -510,7 +521,7 @@ export default function Hero() {
             <div className="stat"><span className="stat-v" id="wsc">{wscValue}</span><span className="stat-l">msg/sec peak</span></div>
             <div className="stat"><span className="stat-v">5x</span><span className="stat-l">Node cluster</span></div>
             <div className="stat"><span className="stat-v">4</span><span className="stat-l">Projects shipped</span></div>
-            <div className="stat"><span className="stat-v">21</span><span className="stat-l">Years old</span></div>
+            <div className="stat"><span className="stat-v">{getYearsOld()}</span><span className="stat-l">Years old</span></div>
           </div>
         </div>
         

@@ -88,6 +88,16 @@ export default function Navbar() {
             ))}
           </div>
           <div className="nav-r">
+            <a 
+              href="/resume.pdf" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="nav-cv-btn" 
+              title="View Resume / CV"
+            >
+              <i className="bx bx-file"></i>
+              <span>Resume</span>
+            </a>
             <button className="ibtn" id="tgl" aria-label="Toggle theme" onClick={toggleTheme}>
               <i className="bx bx-sun i-sun"></i><i className="bx bx-moon i-moon"></i>
             </button>
@@ -112,6 +122,16 @@ export default function Navbar() {
               <span className="nn">{link.num}.</span>{link.label}
             </a>
           ))}
+          <a 
+            href="/resume.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="mpnl-resume-link" 
+            onClick={() => setIsOpen(false)}
+          >
+            <i className="bx bx-file"></i>
+            <span>Resume / CV ↗</span>
+          </a>
         </nav>
       </div>
     </>

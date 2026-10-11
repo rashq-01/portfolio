@@ -5,7 +5,9 @@ const commandsList = {
   sudo: 'rajesh is not in the sudoers file. This incident will be reported to Santa Claus.',
   date: new Date().toString(),
   whoami: 'rajesh (root access denied)',
-  help: 'Available commands:\n- about     : Who is Rajesh?\n- skills    : Tech stack & tools\n- projects  : Featured work\n- contact   : How to reach me\n- email     : Display direct email\n- clear     : Clear terminal output\n- date      : Current system date\n- sudo      : Superuser access\n- echo      : Repeat after me\n- whoami    : Print current user\n- status    : System health check\n- deploy    : [LIVE] Deploy infrastructure\n- nmap      : [LIVE] Scan network ports\n- neofetch  : System information\n- ifconfig  : Network interfaces\n- matrix    : The Matrix has you...\n- docker    : Container ASCII\n- architecture: System Design ASCII\n- database  : Database ASCII\n- server    : Server rack ASCII',
+  help: 'Available commands:\n- about     : Who is Rajesh?\n- skills    : Tech stack & tools\n- projects  : Featured work\n- contact   : How to reach me\n- resume    : View & download CV\n- email     : Display direct email\n- clear     : Clear terminal output\n- date      : Current system date\n- sudo      : Superuser access\n- echo      : Repeat after me\n- whoami    : Print current user\n- status    : System health check\n- deploy    : [LIVE] Deploy infrastructure\n- nmap      : [LIVE] Scan network ports\n- neofetch  : System information\n- ifconfig  : Network interfaces\n- matrix    : The Matrix has you...\n- docker    : Container ASCII\n- architecture: System Design ASCII\n- database  : Database ASCII\n- server    : Server rack ASCII',
+  resume: 'Opening Rajesh Pandit\'s Resume / CV...\n[FILE]  /resume.pdf\n[GDRIVE] https://drive.google.com/drive/folders/13wYCy4dZ3_jTerUbkt_yKY6EyJcbz17C?usp=sharing\n\n(Opened resume in new tab)',
+  cv: 'Opening Rajesh Pandit\'s Resume / CV...\n[FILE]  /resume.pdf\n[GDRIVE] https://drive.google.com/drive/folders/13wYCy4dZ3_jTerUbkt_yKY6EyJcbz17C?usp=sharing\n\n(Opened resume in new tab)',
   about: 'Rajesh Pandit - Backend Engineer.\nI build distributed infrastructure, real-time platforms, and APIs engineered to handle massive concurrency. I think in systems — not just code.',
   skills: 'Backend: Node.js, Python, C++, Go\nDatabases: MongoDB, PostgreSQL, Redis\nArchitecture: Microservices, WebSockets, Pub/Sub\nCloud: AWS, Docker, Kubernetes',
   projects: '1. NexusChat - Real-time scalable messaging system\n2. LibraTech - Advanced library management API\n3. AirBNB Clone - Full-stack booking platform\n4. CodeJudge - Auto-evaluating competitive platform',
@@ -152,6 +154,10 @@ export default function InteractiveTerminal() {
         }
       }, 400);
       return;
+    }
+
+    if (cmd === 'resume' || cmd === 'cv') {
+      window.open('/resume.pdf', '_blank');
     }
 
     let responseText = '';

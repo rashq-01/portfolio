@@ -11,7 +11,7 @@ export default function Footer() {
         <span className="ft-l">
           <span className="fa">&lt;</span><span className="fa">rajesh</span><span className="fa">/&gt;</span>
           <span style={{color: 'var(--tx3)'}}> &mdash; </span>
-          <span className="fb">&#64;2025</span>
+          <span className="fb">&#64;{new Date().getFullYear()}</span>
           <span style={{color: 'var(--tx3)'}}> &mdash; </span>
           <span className="fc">built with terminal energy</span>
         </span>
