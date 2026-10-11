@@ -361,10 +361,17 @@ export default function Skills() {
       return null;
     }
 
+    const getClientXY = e => {
+      if (e.touches && e.touches.length > 0) return { cx: e.touches[0].clientX, cy: e.touches[0].clientY };
+      if (e.changedTouches && e.changedTouches.length > 0) return { cx: e.changedTouches[0].clientX, cy: e.changedTouches[0].clientY };
+      return { cx: e.clientX, cy: e.clientY };
+    };
+
     const handleMouseMove = e => {
+      const { cx, cy } = getClientXY(e);
       const rect = cv.getBoundingClientRect();
-      const sx   = e.clientX - rect.left;
-      const sy   = e.clientY - rect.top;
+      const sx   = cx - rect.left;
+      const sy   = cy - rect.top;
 
       if (dragging) {
         const w   = toWorld(sx, sy);
@@ -372,28 +379,31 @@ export default function Skills() {
         dragging.y = w.y + dragOffY;
         dragging.vx = 0; dragging.vy = 0;
         cv.style.cursor = 'grabbing';
-        showTip(dragging, e.clientX, e.clientY);
+        showTip(dragging, cx, cy);
+        if (e.cancelable) e.preventDefault();
         return;
       }
       if (panning) {
-        vpX += e.clientX - lastPanX;
-        vpY += e.clientY - lastPanY;
-        lastPanX = e.clientX;
-        lastPanY = e.clientY;
+        vpX += cx - lastPanX;
+        vpY += cy - lastPanY;
+        lastPanX = cx;
+        lastPanY = cy;
         cv.style.cursor = 'grabbing';
+        if (e.cancelable) e.preventDefault();
         return;
       }
       const hit = getNode(sx, sy);
       hovered = hit;
       cv.style.cursor = hit ? 'grab' : 'crosshair';
-      if (hit) showTip(hit, e.clientX, e.clientY);
+      if (hit) showTip(hit, cx, cy);
       else hideTip();
     };
 
     const handleMouseDown = e => {
+      const { cx, cy } = getClientXY(e);
       const rect = cv.getBoundingClientRect();
-      const sx   = e.clientX - rect.left;
-      const sy   = e.clientY - rect.top;
+      const sx   = cx - rect.left;
+      const sy   = cy - rect.top;
       const hit  = getNode(sx, sy);
       if (hit) {
         dragging = hit;
@@ -404,11 +414,11 @@ export default function Skills() {
         cv.style.cursor = 'grabbing';
       } else {
         panning  = true;
-        lastPanX = e.clientX;
-        lastPanY = e.clientY;
+        lastPanX = cx;
+        lastPanY = cy;
         cv.style.cursor = 'grabbing';
       }
-      e.preventDefault();
+      if (e.type !== 'touchstart' && e.cancelable) e.preventDefault();
     };
 
     const handleMouseUp = () => {
@@ -418,17 +428,19 @@ export default function Skills() {
     };
 
     const handleDblClick = e => {
+      const { cx, cy } = getClientXY(e);
       const rect = cv.getBoundingClientRect();
-      const hit  = getNode(e.clientX - rect.left, e.clientY - rect.top);
+      const hit  = getNode(cx - rect.left, cy - rect.top);
       if (hit) { pinned.delete(hit.id); hit.vx = 0; hit.vy = 0; }
       else { vpX = 0; vpY = 0; vpZ = 1; }
     };
 
     const handleWheel = e => {
       e.preventDefault();
+      const { cx, cy } = getClientXY(e);
       const rect   = cv.getBoundingClientRect();
-      const sx     = e.clientX - rect.left;
-      const sy     = e.clientY - rect.top;
+      const sx     = cx - rect.left;
+      const sy     = cy - rect.top;
       const factor = e.deltaY < 0 ? 1.12 : 0.9;
       const newZ   = Math.max(0.35, Math.min(3, vpZ * factor));
       vpX = sx - (sx - vpX) * (newZ / vpZ);
@@ -437,8 +449,12 @@ export default function Skills() {
     };
 
     cv.addEventListener('mousemove', handleMouseMove);
+    cv.addEventListener('touchmove', handleMouseMove, { passive: false });
     cv.addEventListener('mousedown', handleMouseDown);
+    cv.addEventListener('touchstart', handleMouseDown, { passive: true });
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchend', handleMouseUp);
+    window.addEventListener('touchcancel', handleMouseUp);
     cv.addEventListener('dblclick', handleDblClick);
     cv.addEventListener('wheel', handleWheel, { passive: false });
     cv.addEventListener('mouseleave', () => { hovered = null; dragging = null; panning = false; hideTip(); cv.style.cursor = 'crosshair'; });
@@ -449,8 +465,12 @@ export default function Skills() {
       cancelAnimationFrame(animId);
       if (tipEl) tipEl.remove();
       cv.removeEventListener('mousemove', handleMouseMove);
+      cv.removeEventListener('touchmove', handleMouseMove);
       cv.removeEventListener('mousedown', handleMouseDown);
+      cv.removeEventListener('touchstart', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchend', handleMouseUp);
+      window.removeEventListener('touchcancel', handleMouseUp);
       cv.removeEventListener('dblclick', handleDblClick);
       cv.removeEventListener('wheel', handleWheel);
       window.removeEventListener('resize', resize);

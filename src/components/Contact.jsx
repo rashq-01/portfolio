@@ -44,7 +44,6 @@ export default function Contact() {
             </button>
           </div>
           <div className="ct-meta">
-            <span className="ct-mi"><i className="bx bx-phone"></i>+977 98XXXXXXXX</span>
             <span className="ct-mi"><i className="bx bx-map"></i>Birgunj, Nepal</span>
           </div>
           <div className="ct-soc">

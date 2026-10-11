@@ -377,7 +377,7 @@ export default function Hero() {
     let animId;
     let lastTime = performance.now();
 
-    const CONSTANT_SPEED = 0.05; // Base rotation speed
+    const CONSTANT_SPEED = 0.04; // Base rotation speed (reduced by 3% from 0.05)
 
     function render(time) {
       const dt = time - lastTime;
